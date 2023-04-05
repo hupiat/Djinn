@@ -1,0 +1,13 @@
+#sidenav,
+#sidenav nav {
+  position: fixed;
+  display: flex;
+  width: max(200px, 20vw);
+  height: 100vh;
+  max-width: 350px;
+}
+
+#sidenav__title {
+  font-size: 2rem;
+  margin: 35px 25px;
+}
