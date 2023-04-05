@@ -19,9 +19,14 @@ public class ErrorController extends ResponseEntityExceptionHandler {
 		request);
     }
 
-    @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class,
-	    NoSuchElementException.class })
+    @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
     protected ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
 	return handleExceptionInternal(ex, "Malformed query", new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(value = { NoSuchElementException.class })
+    protected ResponseEntity<Object> handleNotFoundResource(RuntimeException ex, WebRequest request) {
+	return handleExceptionInternal(ex, "Requested resource not found", new HttpHeaders(), HttpStatus.NOT_FOUND,
+		request);
     }
 }
