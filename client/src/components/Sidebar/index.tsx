@@ -1,6 +1,6 @@
 import { Treemap, Trend, Visible } from "@rsuite/icons";
 import React from "react";
-import { Header, Nav, Sidenav } from "rsuite";
+import { Nav, Sidenav } from "rsuite";
 import "./styles.css";
 
 export default function Sidebar() {

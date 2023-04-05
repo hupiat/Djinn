@@ -1,34 +1,26 @@
 package hupiat.intranet.server.equipments;
 
-import java.io.Serializable;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
+import hupiat.intranet.server.core.entities.AbstractEntityObject;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 
 @Entity
-public class Equipment implements Serializable {
+public class Equipment extends AbstractEntityObject<Short> {
 
-    @Id
-    @GeneratedValue
-    private short id;
+    @Cascade(CascadeType.ALL)
+    private Set<EquipmentAttribute> attributes = new LinkedHashSet<>();
 
-    private String name;
-
-    public short getId() {
-	return id;
+    public Set<EquipmentAttribute> getAttributes() {
+	return attributes;
     }
 
-    public void setId(short id) {
-	this.id = id;
-    }
-
-    public String getName() {
-	return name;
-    }
-
-    public void setName(String name) {
-	this.name = name;
+    public void setAttributes(Set<EquipmentAttribute> attributes) {
+	this.attributes = attributes;
     }
 
 }
