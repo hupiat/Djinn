@@ -27,7 +27,7 @@ public class EquipmentController {
 
     @GetMapping("${id}")
     public Equipment getById(@PathVariable short id) {
-	return equipmentRepository.findById(id).orElse(null);
+	return equipmentRepository.findById(id).orElseThrow();
     }
 
     @PostMapping
