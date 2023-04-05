@@ -1,0 +1,37 @@
+.board__tilt {
+  background-color: #004d40;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  height: max(20vh, 130px);
+  margin: 75px 40px;
+  cursor: grab;
+  transition-duration: 250ms;
+  animation-duration: 250ms;
+}
+
+.board__tilt:active {
+  cursor: grabbing;
+}
+
+.board__tilt:hover {
+  background-color: #00897b;
+}
+
+.board__tilt header {
+  color: #fff;
+  padding: 30px;
+  font-size: 3rem;
+}
+
+.board__tilt main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: max(10vw, 20px);
+}
+
+.board__tilt main > svg {
+  fill: #fff;
+  font-size: 7rem;
+}
