@@ -1,4 +1,4 @@
-package hupiat.intranet.server.equipments;
+package hupiat.intranet.server.equipments.attributes;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

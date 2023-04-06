@@ -25,7 +25,7 @@ public class EquipmentController {
 	return equipmentRepository.findAll();
     }
 
-    @GetMapping("${id}")
+    @GetMapping("{id}")
     public Equipment getById(@PathVariable short id) {
 	return equipmentRepository.findById(id).orElseThrow();
     }
@@ -40,7 +40,7 @@ public class EquipmentController {
 	return equipmentRepository.save(equipment);
     }
 
-    @DeleteMapping("${id}")
+    @DeleteMapping("{id}")
     public void delete(@PathVariable short id) {
 	equipmentRepository.deleteById(id);
     }

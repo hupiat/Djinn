@@ -13,13 +13,13 @@ public abstract class AbstractEntityObject<ID> implements Serializable {
 
     @Id
     @GeneratedValue
-    private ID id;
+    protected ID id;
 
     @Column(nullable = false)
-    private String name;
+    protected String name;
 
-    @Column(columnDefinition = "TEXT")
-    private String description;
+    @Column(columnDefinition = "TEXT", nullable = false)
+    protected String description;
 
     public ID getId() {
 	return id;
