@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import hupiat.intranet.server.core.errors.CommonControllerExceptions;
+
 @RestController("api/equipments")
-public class EquipmentController {
+public class EquipmentController implements CommonControllerExceptions {
 
     private final EquipmentRepository equipmentRepository;
 
@@ -42,6 +44,9 @@ public class EquipmentController {
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable short id) {
+	if (!equipmentRepository.existsById(id)) {
+	    throwErrorNotFound(id);
+	}
 	equipmentRepository.deleteById(id);
     }
 }
