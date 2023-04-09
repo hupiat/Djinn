@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { useState, useContext } from "react";
-import { ContextChildren } from "../../types";
+import { ContextChildren } from "../../commons/types";
 import { PATH_EQUIPMENTS } from "./paths";
 
 const DEFAULT_PATH = PATH_EQUIPMENTS;

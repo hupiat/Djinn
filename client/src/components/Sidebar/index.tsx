@@ -5,14 +5,13 @@ import { PATH_ANALYTICS, PATH_EQUIPMENTS, PATH_MONITORING } from "./paths";
 import { useSidebarContext } from "./context";
 import { useCallback } from "react";
 
-const ACTIVE_ICON_COLOR = "#7B1FA2";
+const ACTIVE_COLOR = "#7B1FA2";
 
 export default function Sidebar() {
   const { currentSidebarPath, setCurrentSidebarPath } = useSidebarContext();
 
   const fillActive = useCallback(
-    (path: string) =>
-      currentSidebarPath === path ? ACTIVE_ICON_COLOR : undefined,
+    (path: string) => (currentSidebarPath === path ? ACTIVE_COLOR : undefined),
     [currentSidebarPath]
   );
 
@@ -38,7 +37,7 @@ export default function Sidebar() {
         </Nav.Item>
       );
     },
-    [fillActive]
+    [fillActive, setCurrentSidebarPath]
   );
 
   return (
