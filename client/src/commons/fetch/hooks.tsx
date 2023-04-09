@@ -16,10 +16,12 @@ export const useStoreData = <T extends BusinessObject>(store: DataStore<T>) => {
   return useSyncExternalStore(subscribe, getData);
 };
 
-export const useStoreDataEquipments = (): [
-  Set<Equipment> | undefined,
-  DataStore<Equipment>
-] => {
+type StoreSnapshot<T extends BusinessObject> = [
+  Set<T> | undefined,
+  DataStore<T>
+];
+
+export const useStoreDataEquipments = (): StoreSnapshot<Equipment> => {
   const store = useRef<DataStore<Equipment>>(
     new DataStore<Equipment>(PATH_EQUIPMENTS)
   );

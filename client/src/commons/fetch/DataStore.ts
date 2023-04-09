@@ -3,7 +3,7 @@ import { BusinessObject, BusinessObjectWithoutId } from "../types";
 const API_PREFIX = "api";
 
 export default class DataStore<T extends BusinessObject> {
-  private url?: string;
+  private url: string;
   private subscribers = new Set<() => void>();
 
   data?: Set<T>;
@@ -21,8 +21,8 @@ export default class DataStore<T extends BusinessObject> {
   ): Promise<void> {
     try {
       await callback(url);
-    } catch {
-      throw Error("Cannot fetch : " + url);
+    } catch (e) {
+      console.error(e);
     }
   }
 
@@ -55,7 +55,7 @@ export default class DataStore<T extends BusinessObject> {
   // Init data
 
   async fetch(): Promise<void> {
-    await this.doFetch(this.url!, async (url) => {
+    await this.doFetch(this.url, async (url) => {
       this.data?.clear(); // Better cleaning up for js engine
       const res = await fetch(url);
       this.data = new Set(await res.json());
@@ -97,7 +97,7 @@ export default class DataStore<T extends BusinessObject> {
 
   async add(obj: BusinessObjectWithoutId<T>): Promise<void> {
     this.checkForSyncBeforeProcessing();
-    await this.doFetch(this.url!, async (url) => {
+    await this.doFetch(this.url, async (url) => {
       const res = await fetch(url, {
         method: "POST",
         body: JSON.stringify(obj),
@@ -110,7 +110,7 @@ export default class DataStore<T extends BusinessObject> {
 
   async update(obj: T): Promise<void> {
     this.checkForSyncBeforeProcessing();
-    await this.doFetch(this.url!, async (url) => {
+    await this.doFetch(this.url, async (url) => {
       const res = await fetch(url, {
         method: "PUT",
         body: JSON.stringify(obj),
@@ -128,7 +128,7 @@ export default class DataStore<T extends BusinessObject> {
   async delete(id: number): Promise<Boolean> {
     this.checkForSyncBeforeProcessing();
     let ok = false;
-    await this.doFetch(this.url! + "/" + id, async (url) => {
+    await this.doFetch(this.url + "/" + id, async (url) => {
       const res = await fetch(url, {
         method: "DELETE",
       });
