@@ -133,10 +133,12 @@ export default class DataStore<T extends BusinessObject> {
         method: "DELETE",
       });
       const other = this.getById(id);
-      if (other) {
-        this.data!.delete(other);
-      }
       ok = res.ok;
+      if (other && ok) {
+        // query should throws an exception but nvm
+        this.data!.delete(other);
+        this.notify();
+      }
     });
     return ok;
   }
