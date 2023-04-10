@@ -37,7 +37,7 @@ export default class DataStore<T extends BusinessObject> {
     }
   }
 
-  // data is public, stay private to use a Set
+  // data is public, stay private (to use a Set)
   private getById(id: number): T | undefined {
     if (this.data) {
       let other;
@@ -60,11 +60,11 @@ export default class DataStore<T extends BusinessObject> {
     }
   }
 
-  subscribe(notify: (data: Set<T>) => void) {
+  subscribe(notify: (data: Set<T>) => void): void {
     this.subscribers.add(notify);
   }
 
-  unsubscribe(notify: (data: Set<T>) => void) {
+  unsubscribe(notify: (data: Set<T>) => void): void {
     this.subscribers.delete(notify);
   }
 
@@ -81,18 +81,19 @@ export default class DataStore<T extends BusinessObject> {
   }
 
   async fetchById(id: number): Promise<void> {
-    let obj: T;
     await DataStore.doFetch(this.url + "/" + id, async (url) => {
       const res = await fetch(url);
-      obj = await res.json();
+      const obj = await res.json();
       if (this.data) {
         const other = this.getById(id);
         if (other) {
           this.data.delete(other);
         }
-        this.data.add(obj);
-        this.notify();
+      } else {
+        this.data = new Set<T>();
       }
+      this.data.add(obj);
+      this.notify();
     });
   }
 
