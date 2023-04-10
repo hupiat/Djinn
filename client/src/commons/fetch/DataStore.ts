@@ -2,6 +2,7 @@ import { BusinessObject, BusinessObjectWithoutId } from "../types";
 
 const API_PREFIX = "api";
 
+// Observable pattern
 export default class DataStore<T extends BusinessObject> {
   private url: string;
   private subscribers = new Set<(data: Set<T>) => void>();
@@ -15,17 +16,28 @@ export default class DataStore<T extends BusinessObject> {
       url.trim().replaceAll(API_PREFIX, "").replaceAll("/", "");
   }
 
-  private async doFetch(
+  isSync(): boolean {
+    return !!this.data;
+  }
+
+  hasSuscribers(): boolean {
+    return this.subscribers.size !== 0;
+  }
+
+  // Just to wrap requests
+  static async doFetch(
     url: string,
     callback: (url: string) => Promise<void>
   ): Promise<void> {
     try {
       await callback(url);
     } catch (e) {
+      // TODO : handle this better
       console.error(e);
     }
   }
 
+  // data is public, stay private to use a Set
   private getById(id: number): T | undefined {
     if (this.data) {
       let other;
@@ -40,6 +52,7 @@ export default class DataStore<T extends BusinessObject> {
   }
 
   // Suscribers
+  // Listeners should update React states and manage data flow from this class
 
   private notify(): void {
     if (this.isSync()) {
@@ -55,10 +68,10 @@ export default class DataStore<T extends BusinessObject> {
     this.subscribers.delete(notify);
   }
 
-  // Init data
+  // Loads from server
 
   async fetchAll(): Promise<void> {
-    await this.doFetch(this.url, async (url) => {
+    await DataStore.doFetch(this.url, async (url) => {
       this.data?.clear(); // Better cleaning up for js engine
       this.data = undefined;
       const res = await fetch(url);
@@ -69,7 +82,7 @@ export default class DataStore<T extends BusinessObject> {
 
   async fetchById(id: number): Promise<void> {
     let obj: T;
-    await this.doFetch(this.url + "/" + id, async (url) => {
+    await DataStore.doFetch(this.url + "/" + id, async (url) => {
       const res = await fetch(url);
       obj = await res.json();
       if (this.data) {
@@ -83,15 +96,9 @@ export default class DataStore<T extends BusinessObject> {
     });
   }
 
-  isSync(): boolean {
-    return !!this.url && !!this.data;
-  }
+  // Update store remotely
 
-  hasSuscribers(): boolean {
-    return this.subscribers.size !== 0;
-  }
-
-  // Update store
+  // Consistency
 
   private checkForSyncBeforeProcessing(): void {
     if (!this.isSync()) {
@@ -99,9 +106,11 @@ export default class DataStore<T extends BusinessObject> {
     }
   }
 
+  // Designed to lead backend API design itself =)
+
   async add(obj: BusinessObjectWithoutId<T>): Promise<void> {
     this.checkForSyncBeforeProcessing();
-    await this.doFetch(this.url, async (url) => {
+    await DataStore.doFetch(this.url, async (url) => {
       const res = await fetch(url, {
         method: "POST",
         body: JSON.stringify(obj),
@@ -114,7 +123,7 @@ export default class DataStore<T extends BusinessObject> {
 
   async update(obj: T): Promise<void> {
     this.checkForSyncBeforeProcessing();
-    await this.doFetch(this.url, async (url) => {
+    await DataStore.doFetch(this.url, async (url) => {
       const res = await fetch(url, {
         method: "PUT",
         body: JSON.stringify(obj),
@@ -132,7 +141,7 @@ export default class DataStore<T extends BusinessObject> {
   async delete(id: number): Promise<Boolean> {
     this.checkForSyncBeforeProcessing();
     let ok = false;
-    await this.doFetch(this.url + "/" + id, async (url) => {
+    await DataStore.doFetch(this.url + "/" + id, async (url) => {
       const res = await fetch(url, {
         method: "DELETE",
       });

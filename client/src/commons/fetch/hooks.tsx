@@ -14,19 +14,24 @@ export const useStoreData = <T extends BusinessObject>(
   const [data, setData] = useState<T[]>();
 
   useEffect(() => {
+    const suscriber = (data: Set<T>) => setData([...data]);
+
     // Fetching base data (getAll)
     const init = async () => {
       await store.fetchAll();
       setData([...store.data!]);
+
+      // Then suscribing changes
+      // Queries implemented in DataStore.ts
+      // Need to stay in this closure
+      store.subscribe(suscriber);
     };
+
     init();
 
-    // Suscribing changes
-    // Queries implemented in DataStore.ts
-    const suscriber = (data: Set<T>) => setData([...data]);
-    store.subscribe(suscriber);
-
     return () => store.unsubscribe(suscriber);
+
+    // This reference should never update in practice
   }, [store]);
 
   return data;
