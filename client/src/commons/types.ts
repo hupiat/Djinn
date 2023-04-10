@@ -3,6 +3,8 @@ export type ContextChildren =
   | JSX.Element[]
   | Array<JSX.Element | undefined>;
 
+export type DML_Operation = "add" | "edit" | "delete";
+
 // -----------------------------------------------------
 // BUSINESS
 // -----------------------------------------------------

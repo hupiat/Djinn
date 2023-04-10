@@ -4,7 +4,7 @@ const API_PREFIX = "api";
 
 export default class DataStore<T extends BusinessObject> {
   private url: string;
-  private subscribers = new Set<() => void>();
+  private subscribers = new Set<(data: Set<T>) => void>();
 
   data?: Set<T>;
 
@@ -32,6 +32,7 @@ export default class DataStore<T extends BusinessObject> {
       for (const otherObj of this.data) {
         if (otherObj.id === id) {
           other = otherObj;
+          break;
         }
       }
       return other;
@@ -41,22 +42,25 @@ export default class DataStore<T extends BusinessObject> {
   // Suscribers
 
   private notify(): void {
-    this.subscribers.forEach((notify) => notify());
+    if (this.isSync()) {
+      this.subscribers.forEach((notify) => notify(this.data!));
+    }
   }
 
-  subscribe(notify: () => void) {
+  subscribe(notify: (data: Set<T>) => void) {
     this.subscribers.add(notify);
   }
 
-  unsubscribe(notify: () => void) {
+  unsubscribe(notify: (data: Set<T>) => void) {
     this.subscribers.delete(notify);
   }
 
   // Init data
 
-  async fetch(): Promise<void> {
+  async fetchAll(): Promise<void> {
     await this.doFetch(this.url, async (url) => {
       this.data?.clear(); // Better cleaning up for js engine
+      this.data = undefined;
       const res = await fetch(url);
       this.data = new Set(await res.json());
       this.notify();

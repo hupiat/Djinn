@@ -2,6 +2,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import { useState, useContext } from "react";
 import { ContextChildren } from "../../commons/types";
 import { PATH_EQUIPMENTS } from "./paths";
+import Sidebar from ".";
 
 const DEFAULT_PATH = PATH_EQUIPMENTS;
 
@@ -28,7 +29,8 @@ const SidebarContext = ({ children }: IProps) => {
         setCurrentSidebarPath: setCurrentPath,
       }}
     >
-      {children}
+      <Sidebar />
+      <div id="sidenav__container">{children}</div>
     </SetupSidebarContext.Provider>
   );
 };

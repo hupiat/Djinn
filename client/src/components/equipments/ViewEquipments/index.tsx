@@ -1,15 +1,9 @@
-import React, { Suspense, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Loader } from "rsuite";
-import { useStoreDataEquipments } from "../../../commons/fetch/hooks.js";
+import { useStoreDataEquipments } from "../../../commons/fetch/hooks.tsx";
 
 export default function ViewEquipments() {
   const [data, store] = useStoreDataEquipments();
 
-  useEffect(() => {
-    store.fetch();
-  }, []);
-
-  console.log(data);
-
-  return <Suspense fallback={<Loader />}></Suspense>;
+  return <></>;
 }

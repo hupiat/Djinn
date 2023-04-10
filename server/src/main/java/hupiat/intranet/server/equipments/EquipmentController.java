@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hupiat.intranet.server.core.errors.CommonControllerExceptions;
+import hupiat.intranet.server.core.errors.ICommonController;
 
-@RestController("api/equipments")
-public class EquipmentController implements CommonControllerExceptions {
+@RestController
+@RequestMapping(ICommonController.API_PREFIX + "/equipments")
+public class EquipmentController implements ICommonController {
 
     private final EquipmentRepository equipmentRepository;
 

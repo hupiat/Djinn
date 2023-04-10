@@ -3,12 +3,15 @@ import { Nav, Sidenav } from "rsuite";
 import "./styles.css";
 import { PATH_ANALYTICS, PATH_EQUIPMENTS, PATH_MONITORING } from "./paths";
 import { useSidebarContext } from "./context";
-import { useCallback } from "react";
+import { useCallback, useTransition } from "react";
+import { useNavigate } from "react-router";
 
 const ACTIVE_COLOR = "#7B1FA2";
 
 export default function Sidebar() {
   const { currentSidebarPath, setCurrentSidebarPath } = useSidebarContext();
+  const [, startTransition] = useTransition();
+  const navigate = useNavigate();
 
   const fillActive = useCallback(
     (path: string) => (currentSidebarPath === path ? ACTIVE_COLOR : undefined),
@@ -25,7 +28,10 @@ export default function Sidebar() {
       return (
         <Nav.Item
           icon={ICONS[path]}
-          onClick={() => setCurrentSidebarPath(path)}
+          onClick={() => {
+            startTransition(() => navigate(path));
+            setCurrentSidebarPath(path);
+          }}
         >
           <span
             style={{
@@ -37,7 +43,7 @@ export default function Sidebar() {
         </Nav.Item>
       );
     },
-    [fillActive, setCurrentSidebarPath]
+    [fillActive, setCurrentSidebarPath, startTransition, navigate]
   );
 
   return (
