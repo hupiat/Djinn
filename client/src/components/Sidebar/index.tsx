@@ -5,8 +5,9 @@ import { PATH_ANALYTICS, PATH_EQUIPMENTS, PATH_MONITORING } from "./paths";
 import { useSidebarContext } from "./context";
 import { useCallback, useTransition } from "react";
 import { useNavigate } from "react-router";
+import { getCSSVar } from "../../commons/tools";
 
-const ACTIVE_COLOR = "#7B1FA2";
+const ACTIVE_COLOR = getCSSVar("--purple-app");
 
 export default function Sidebar() {
   const { currentSidebarPath, setCurrentSidebarPath } = useSidebarContext();

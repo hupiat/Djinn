@@ -23,3 +23,9 @@
   width: var(--sidenav-container-width);
   height: 100vh;
 }
+
+#sidenav,
+#sidenav__container {
+  transition-duration: var(--animation-duration-app);
+  animation-duration: var(--animation-duration-app);
+}

@@ -23,4 +23,7 @@ code {
   --error-app: #b71c1c;
   --warning-app: #ff8f00;
   --black-app: #37474f;
+
+  --transition-duration-app: 500ms;
+  --animation-duration-app: 250ms;
 }
