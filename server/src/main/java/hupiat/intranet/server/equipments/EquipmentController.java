@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hupiat.intranet.server.core.errors.ICommonController;
+import hupiat.intranet.server.core.controllers.ICommonController;
 
 @RestController
 @RequestMapping(ICommonController.API_PREFIX + "/equipments")

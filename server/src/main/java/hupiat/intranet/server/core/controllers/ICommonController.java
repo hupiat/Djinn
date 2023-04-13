@@ -1,4 +1,4 @@
-package hupiat.intranet.server.core.errors;
+package hupiat.intranet.server.core.controllers;
 
 import java.util.NoSuchElementException;
 

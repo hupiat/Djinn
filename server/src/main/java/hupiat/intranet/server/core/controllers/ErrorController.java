@@ -1,4 +1,4 @@
-package hupiat.intranet.server.core.errors;
+package hupiat.intranet.server.core.controllers;
 
 import java.util.NoSuchElementException;
 
@@ -15,13 +15,14 @@ public class ErrorController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = Exception.class)
     protected ResponseEntity<Object> handleInternalError(RuntimeException ex, WebRequest request) {
-	return handleExceptionInternal(ex, "Internal error", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR,
+	return handleExceptionInternal(ex, "Technical error", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR,
 		request);
     }
 
     @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
     protected ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
-	return handleExceptionInternal(ex, "Malformed query", new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	return handleExceptionInternal(ex, "Malformed query or internal corruption, see for details : ",
+		new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = { NoSuchElementException.class })
