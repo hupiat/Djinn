@@ -3,6 +3,7 @@ import DataStore from "./DataStore";
 import { BusinessObject, Equipment } from "../types";
 import { PATH_EQUIPMENTS } from "../../components/Sidebar/paths";
 import { useMiddlewareContext } from "./context";
+import { useEffectWhenSync } from "../hooks";
 
 type StoreSnapshot<T extends BusinessObject> = [
   Array<T> | undefined,
@@ -16,26 +17,30 @@ const useStoreData = <T extends BusinessObject>(
 ): T[] | undefined => {
   const [data, setData] = useState<T[]>();
 
-  useEffect(() => {
-    const suscriber = (data: Set<T>) => setData([...data]);
+  useEffectWhenSync(
+    // ! TODO : not working at all
+    () => store.isSync(),
+    () => {
+      const suscriber = (data: Set<T>) => setData([...data]);
 
-    // Fetching base data (getAll)
-    const init = async () => {
-      await store.fetchAll();
-      setData([...store.data!]);
+      // Fetching base data (getAll)
+      const init = async () => {
+        await store.fetchAll();
+        setData([...store.data!]);
 
-      // Then suscribing changes
-      // Queries implemented in DataStore.ts
-      // Need to stay in this closure
-      store.subscribe(suscriber);
-    };
+        // Then suscribing changes
+        // Queries implemented in DataStore.ts
+        // Need to stay in this closure
+        store.subscribe(suscriber);
+      };
 
-    init();
+      init();
 
-    return () => store.unsubscribe(suscriber);
-
+      return () => store.unsubscribe(suscriber);
+    },
     // This reference should never update in practice
-  }, [store]);
+    [store]
+  );
 
   return data;
 };
@@ -52,11 +57,13 @@ const useStoreDataCreate = <T extends BusinessObject>(
 
   useEffect(() => {
     store.current.formatUrlThenSet(path, metadataInit?.apiPrefix);
-  }, [metadataInit]);
+  }, [metadataInit?.apiPrefix, path]);
 
   const data = useStoreData(store.current);
   return [data, store.current];
 };
+
+// Business
 
 export const useStoreDataEquipments = (): StoreSnapshot<Equipment> =>
   useStoreDataCreate<Equipment>(PATH_EQUIPMENTS);

@@ -8,11 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(ICommonController.PATH_METADATA)
 public class MetadataController implements ICommonController {
 
-    public static record HandshakeInitDTO(String apiPrefix) {
-
+    private record HandshakeInitDTO(String apiPrefix) {
     }
 
-    @GetMapping(ICommonController.PATH_METADATA + "/handshake")
+    @GetMapping("handshake")
     public HandshakeInitDTO getHandshakeInit() {
 	return new HandshakeInitDTO(API_PREFIX);
     }

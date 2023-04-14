@@ -2,27 +2,26 @@ import { BusinessObject, BusinessObjectWithoutId } from "../types";
 
 // Observable pattern
 export default class DataStore<T extends BusinessObject> {
-  // Always defined but we are calling a function in constructor to format
-  private url!: string;
-
+  private url?: string;
   private subscribers = new Set<(data: Set<T>) => void>();
 
   data?: Set<T>;
 
-  formatUrlThenSet = (url: string, apiPrefix?: string) => {
+  formatUrlThenSet(url: string, apiPrefix?: string): DataStore<T> {
+    this.url = undefined;
     url = url.trim();
     if (apiPrefix) {
-      this.url = url.replaceAll(apiPrefix, "");
+      this.url = apiPrefix + "/" + url.replaceAll(apiPrefix, "");
     }
-    this.url = url;
-  };
+    return this;
+  }
 
   constructor(url: string, apiPrefix?: string) {
     this.formatUrlThenSet(url, apiPrefix);
   }
 
   isSync(): boolean {
-    return !!this.data;
+    return !!this.data && !!this.url;
   }
 
   hasSuscribers(): boolean {
@@ -76,7 +75,7 @@ export default class DataStore<T extends BusinessObject> {
   // Loads from server
 
   async fetchAll(): Promise<void> {
-    await DataStore.doFetch(this.url, async (url) => {
+    await DataStore.doFetch(this.url!, async (url) => {
       this.data?.clear(); // Better cleaning up for js engine
       this.data = undefined;
       const res = await fetch(url);
@@ -86,7 +85,7 @@ export default class DataStore<T extends BusinessObject> {
   }
 
   async fetchById(id: number): Promise<void> {
-    await DataStore.doFetch(this.url + "/" + id, async (url) => {
+    await DataStore.doFetch(this.url! + "/" + id, async (url) => {
       const res = await fetch(url);
       const obj = await res.json();
       if (this.data) {
@@ -116,7 +115,7 @@ export default class DataStore<T extends BusinessObject> {
 
   async add(obj: BusinessObjectWithoutId<T>): Promise<void> {
     this.checkForSyncBeforeProcessing();
-    await DataStore.doFetch(this.url, async (url) => {
+    await DataStore.doFetch(this.url!, async (url) => {
       const res = await fetch(url, {
         method: "POST",
         body: JSON.stringify(obj),
@@ -129,7 +128,7 @@ export default class DataStore<T extends BusinessObject> {
 
   async update(obj: T): Promise<void> {
     this.checkForSyncBeforeProcessing();
-    await DataStore.doFetch(this.url, async (url) => {
+    await DataStore.doFetch(this.url!, async (url) => {
       const res = await fetch(url, {
         method: "PUT",
         body: JSON.stringify(obj),
@@ -147,7 +146,7 @@ export default class DataStore<T extends BusinessObject> {
   async delete(id: number): Promise<Boolean> {
     this.checkForSyncBeforeProcessing();
     let ok = false;
-    await DataStore.doFetch(this.url + "/" + id, async (url) => {
+    await DataStore.doFetch(this.url! + "/" + id, async (url) => {
       const res = await fetch(url, {
         method: "DELETE",
       });

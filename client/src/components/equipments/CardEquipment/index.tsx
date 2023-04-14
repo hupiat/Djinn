@@ -10,6 +10,7 @@ export default function CardEquipment({ equipment }: IProps) {
   return (
     <Panel bordered header={equipment.name}>
       <p>{equipment.description}</p>
+      <p>{equipment.attributes.toString()}</p>
     </Panel>
   );
 }
