@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import hupiat.intranet.server.core.controllers.ICommonController;
 
 @RestController
-@RequestMapping(ICommonController.API_PREFIX + "/equipments")
+@RequestMapping(ICommonController.PATH_API_EQUIPMENTS)
 public class EquipmentController implements ICommonController {
 
     private final EquipmentRepository equipmentRepository;

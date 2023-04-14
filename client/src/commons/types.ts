@@ -5,6 +5,10 @@ export type ContextChildren =
 
 export type DML_Operation = "add" | "edit" | "delete";
 
+export interface HandshakeInitDTO {
+  apiPrefix: string;
+}
+
 // -----------------------------------------------------
 // BUSINESS
 // -----------------------------------------------------

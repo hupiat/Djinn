@@ -7,19 +7,22 @@ import {
   PATH_EQUIPMENTS,
   PATH_MONITORING,
 } from "./components/Sidebar/paths";
+import MiddlewareContext from "./commons/middleware/context";
 
 function App() {
   return (
-    <Router>
-      <SidebarContext>
-        <Routes>
-          <Route path={"/"} element={<></>} />
-          <Route path={PATH_EQUIPMENTS} element={<ViewEquipments />} />
-          <Route path={PATH_MONITORING} element={<ViewEquipments />} />
-          <Route path={PATH_ANALYTICS} element={<ViewEquipments />} />
-        </Routes>
-      </SidebarContext>
-    </Router>
+    <MiddlewareContext>
+      <Router>
+        <SidebarContext>
+          <Routes>
+            <Route path={"/"} element={<></>} />
+            <Route path={PATH_EQUIPMENTS} element={<ViewEquipments />} />
+            <Route path={PATH_MONITORING} element={<ViewEquipments />} />
+            <Route path={PATH_ANALYTICS} element={<ViewEquipments />} />
+          </Routes>
+        </SidebarContext>
+      </Router>
+    </MiddlewareContext>
   );
 }
 

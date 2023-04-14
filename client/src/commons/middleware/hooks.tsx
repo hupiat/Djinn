@@ -2,13 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import DataStore from "./DataStore";
 import { BusinessObject, Equipment } from "../types";
 import { PATH_EQUIPMENTS } from "../../components/Sidebar/paths";
+import { useMiddlewareContext } from "./context";
 
 type StoreSnapshot<T extends BusinessObject> = [
   Array<T> | undefined,
   DataStore<T>
 ];
 
-export const useStoreData = <T extends BusinessObject>(
+// Initialization
+
+const useStoreData = <T extends BusinessObject>(
   store: DataStore<T>
 ): T[] | undefined => {
   const [data, setData] = useState<T[]>();
@@ -37,10 +40,23 @@ export const useStoreData = <T extends BusinessObject>(
   return data;
 };
 
-export const useStoreDataEquipments = (): StoreSnapshot<Equipment> => {
-  const store = useRef<DataStore<Equipment>>(
-    new DataStore<Equipment>(PATH_EQUIPMENTS)
+// Creation
+
+const useStoreDataCreate = <T extends BusinessObject>(
+  path: string
+): StoreSnapshot<T> => {
+  const { metadataInit } = useMiddlewareContext();
+  const store = useRef<DataStore<T>>(
+    new DataStore<T>(path, metadataInit?.apiPrefix)
   );
+
+  useEffect(() => {
+    store.current.formatUrlThenSet(path, metadataInit?.apiPrefix);
+  }, [metadataInit]);
+
   const data = useStoreData(store.current);
   return [data, store.current];
 };
+
+export const useStoreDataEquipments = (): StoreSnapshot<Equipment> =>
+  useStoreDataCreate<Equipment>(PATH_EQUIPMENTS);

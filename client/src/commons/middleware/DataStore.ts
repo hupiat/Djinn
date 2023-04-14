@@ -1,19 +1,24 @@
 import { BusinessObject, BusinessObjectWithoutId } from "../types";
 
-const API_PREFIX = "api";
-
 // Observable pattern
 export default class DataStore<T extends BusinessObject> {
-  private url: string;
+  // Always defined but we are calling a function in constructor to format
+  private url!: string;
+
   private subscribers = new Set<(data: Set<T>) => void>();
 
   data?: Set<T>;
 
-  constructor(url: string) {
-    this.url =
-      API_PREFIX +
-      "/" +
-      url.trim().replaceAll(API_PREFIX, "").replaceAll("/", "");
+  formatUrlThenSet = (url: string, apiPrefix?: string) => {
+    url = url.trim();
+    if (apiPrefix) {
+      this.url = url.replaceAll(apiPrefix, "");
+    }
+    this.url = url;
+  };
+
+  constructor(url: string, apiPrefix?: string) {
+    this.formatUrlThenSet(url, apiPrefix);
   }
 
   isSync(): boolean {
