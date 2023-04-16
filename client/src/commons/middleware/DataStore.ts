@@ -5,6 +5,8 @@ export default class DataStore<T extends BusinessObject> {
   private url?: string;
   private subscribers = new Set<(data: Set<T>) => void>();
 
+  // Should be readonly but as a low level stub would be just a ts thing
+  // data is stated then in react components
   data?: Set<T>;
 
   formatUrlThenSet(url: string, apiPrefix?: string): DataStore<T> {

@@ -19,7 +19,7 @@ public enum EquipmentAttributeType {
 
     public static void checkTypeOrThrow(Class<?> objClazz) {
 	if (Arrays.stream(EquipmentAttributeType.values()).map(EquipmentAttributeType::getClazz)
-		.noneMatch(clazz -> clazz.equals(objClazz))) {
+		.noneMatch(objClazz::equals)) {
 	    throw new IllegalStateException(
 		    "Unsupported attribute type : " + objClazz == null ? "null" : objClazz.getSimpleName());
 	}

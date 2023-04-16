@@ -1,10 +1,8 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { useState, useContext } from "react";
 import { ContextChildren } from "../../commons/types";
-import { PATH_EQUIPMENTS } from "./paths";
+import { PATH_DEFAULT } from "./paths";
 import Sidebar from ".";
-
-const DEFAULT_PATH = PATH_EQUIPMENTS;
 
 interface ISidebarContext {
   currentSidebarPath: string;
@@ -20,7 +18,7 @@ interface IProps {
 }
 
 const SidebarContext = ({ children }: IProps) => {
-  const [currentPath, setCurrentPath] = useState<string>(DEFAULT_PATH);
+  const [currentPath, setCurrentPath] = useState<string>(PATH_DEFAULT);
 
   return (
     <SetupSidebarContext.Provider
