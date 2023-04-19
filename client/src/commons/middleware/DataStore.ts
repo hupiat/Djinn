@@ -23,7 +23,7 @@ export default class DataStore<T extends BusinessObject> {
       }
       this.url = apiPrefix + "/" + url;
     } else {
-      console.error("DataStore#formatUrlThenSet", apiPrefix, url);
+      console.error("DataStore#formatUrlThenSet: ", apiPrefix, url);
     }
     return this;
   }
@@ -34,7 +34,11 @@ export default class DataStore<T extends BusinessObject> {
 
   // Gets diffs from remote service (will not be handled by rsuite schema-typed)
   // --> [res: boolean, {id: fields[]}]
-  async observeChanges(state: Array<T> | T): Promise<DicoOf_Ids_And_Fields<T>> {
+  async observeChanges(
+    // Should preferably be provided
+    state: Array<T> | T = [...this.data!]
+  ): Promise<DicoOf_Ids_And_Fields<T>> {
+    this.checkForSyncBeforeProcessing();
     const isArray = Array.isArray(state);
 
     const consumer = async (obj: T): Promise<(keyof T)[]> => {
@@ -48,7 +52,7 @@ export default class DataStore<T extends BusinessObject> {
           .map((key) => key as keyof T)
           .filter((key) => !_.isEqual(obj[key], other![key]));
       } else {
-        console.error("DataStore#observeChanges: could not find : " + obj.id);
+        console.error("DataStore#observeChanges: could not find: ", obj.id);
       }
       return [];
     };
@@ -175,7 +179,9 @@ export default class DataStore<T extends BusinessObject> {
 
   private checkForSyncBeforeProcessing(): void {
     if (!this.isSync()) {
-      throw Error("Cannot perform unless data is fetched");
+      throw Error(
+        "DataStore#checkForSyncBeforeProcessing: cannot perform unless data is fetched"
+      );
     }
   }
 

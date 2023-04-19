@@ -20,10 +20,11 @@ const useStoreData = <T extends BusinessObject>(
     () => {
       const suscriber = (data: Set<T>) => setData([...data]);
 
-      // Fetching base data (getAll)
       const init = async () => {
-        await store.fetchAll();
-        setData([...store.data!]);
+        // Fetching base data (getAll)
+        if (!store.isSync()) {
+          await store.fetchAll();
+        }
 
         // Then suscribing changes
         // Queries implemented in DataStore.ts
@@ -36,7 +37,7 @@ const useStoreData = <T extends BusinessObject>(
       return () => store.unsubscribe(suscriber);
     },
     () => data,
-    () => [...store.data!]
+    () => (store.isSync() ? [...store.data!] : null)
   );
 
   return data;
