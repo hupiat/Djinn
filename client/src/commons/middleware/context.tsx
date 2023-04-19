@@ -5,7 +5,7 @@ import DataStore from "./DataStore";
 import { PATH_METADATA } from "./paths";
 
 interface IMiddlewareContext {
-  metadataInit?: HandshakeInitDTO;
+  metadataInit: HandshakeInitDTO;
 }
 
 const SetupMiddlewareContext = React.createContext<
@@ -20,16 +20,18 @@ const MiddlewareContext = ({ children }: IProps) => {
   const [handshakeInit, setHandshakeInit] = useState<HandshakeInitDTO>();
 
   useEffect(() => {
-    DataStore.doFetch(PATH_METADATA, async (url) => {
-      const res = await fetch(url + "/handshake");
-      setHandshakeInit(await res.json());
-    });
+    if (!handshakeInit) {
+      DataStore.doFetch(PATH_METADATA, async (url) => {
+        const res = await fetch(url + "/handshake");
+        setHandshakeInit(await res.json());
+      });
+    }
   }, [setHandshakeInit]);
 
   return (
     <SetupMiddlewareContext.Provider
       value={{
-        metadataInit: handshakeInit,
+        metadataInit: handshakeInit!,
       }}
     >
       {children}

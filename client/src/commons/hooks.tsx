@@ -5,27 +5,6 @@ import { ErrorMessageType, SchemaCheckResult } from "schema-typed/lib/types";
 import { useDeferredValue } from "react";
 import DataStore from "./middleware/DataStore";
 
-// TODO : rien ne marche ici
-
-export const useEffectWhenSync = (
-  isSync: () => boolean,
-  callback: () => void,
-  ...deps: any[]
-) => {
-  let tmpDeps = isSync() ? deps : undefined;
-  if (tmpDeps) {
-    tmpDeps = [...tmpDeps, callback, isSync];
-  }
-
-  console.log(deps, tmpDeps);
-
-  useEffect(() => {
-    if (isSync()) {
-      callback();
-    }
-  }, tmpDeps);
-};
-
 type FormValidating<
   T extends BusinessObject
   // Remote extends boolean = false

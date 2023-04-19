@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import DataStore from "./DataStore";
 import { BusinessObject, Equipment } from "../types";
 import { PATH_EQUIPMENTS } from "../../components/Sidebar/paths";
 import { useMiddlewareContext } from "./context";
-import { useEffectWhenSync } from "../hooks";
 
 type StoreSnapshot<T extends BusinessObject> = [
   Array<T> | undefined,
@@ -17,9 +16,7 @@ const useStoreData = <T extends BusinessObject>(
 ): T[] | undefined => {
   const [data, setData] = useState<T[]>();
 
-  useEffectWhenSync(
-    // ! TODO : not working at all
-    () => store.isSync(),
+  useSyncExternalStore(
     () => {
       const suscriber = (data: Set<T>) => setData([...data]);
 
@@ -38,8 +35,8 @@ const useStoreData = <T extends BusinessObject>(
 
       return () => store.unsubscribe(suscriber);
     },
-    // This reference should never update in practice
-    [store]
+    () => data,
+    () => [...store.data!]
   );
 
   return data;
@@ -52,12 +49,12 @@ const useStoreDataCreate = <T extends BusinessObject>(
 ): StoreSnapshot<T> => {
   const { metadataInit } = useMiddlewareContext();
   const store = useRef<DataStore<T>>(
-    new DataStore<T>(path, metadataInit?.apiPrefix)
+    new DataStore<T>(path, metadataInit.apiPrefix)
   );
 
   useEffect(() => {
-    store.current.formatUrlThenSet(path, metadataInit?.apiPrefix);
-  }, [metadataInit?.apiPrefix, path]);
+    store.current.formatUrlThenSet(path, metadataInit.apiPrefix);
+  }, [metadataInit.apiPrefix, path]);
 
   const data = useStoreData(store.current);
   return [data, store.current];
