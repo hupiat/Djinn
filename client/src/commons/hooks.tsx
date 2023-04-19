@@ -75,7 +75,7 @@ export const useValidation = <
   const deferredCheck = useDeferredValue(memoModelCheck);
 
   const getModelById = useCallback(
-    (id: number): ModelType => memoModelCheck.find((m) => m.id === id)!,
+    (id: number): ModelType => deferredCheck.find((m) => m.id === id)!,
     [deferredCheck]
   );
 
