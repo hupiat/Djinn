@@ -51,6 +51,8 @@ export type WithoutId<T extends IIdentified> = Omit<T, "id"> &
 
 export type OrArray<T> = T | T[];
 
+export type OrUndefined<T> = T | undefined;
+
 export type DicoOf_Ids_And_Fields<T extends IIdentified> = {
   [id: number]: (keyof T)[];
 };

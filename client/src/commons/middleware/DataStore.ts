@@ -34,24 +34,30 @@ export default class DataStore<T extends BusinessObject> {
 
   // Gets diffs from remote service (will not be handled by rsuite schema-typed)
   // --> [res: boolean, {id: fields[]}]
-  observeChanges(state: Array<T> | T): DicoOf_Ids_And_Fields<T> {
+  async observeChanges(state: Array<T> | T): Promise<DicoOf_Ids_And_Fields<T>> {
     const isArray = Array.isArray(state);
 
-    const checkDiffs = (obj: T): (keyof T)[] => {
-      const other = this.getById(obj.id);
+    const consumer = async (obj: T): Promise<(keyof T)[]> => {
+      let other = this.getById(obj.id);
+      if (!other) {
+        await this.fetchById(obj.id);
+      }
+      other = this.getById(obj.id);
       if (other) {
         return Object.keys(other)
           .map((key) => key as keyof T)
-          .filter((key) => !_.isEqual(obj[key], other[key]));
+          .filter((key) => !_.isEqual(obj[key], other![key]));
+      } else {
+        console.error("DataStore#observeChanges: could not find : " + obj.id);
       }
       return [];
     };
 
-    const predicate = (): DicoOf_Ids_And_Fields<T> => {
+    const predicate = async (): Promise<DicoOf_Ids_And_Fields<T>> => {
       const res = {};
 
-      const assign = (obj: T) => {
-        const diffs = checkDiffs(obj);
+      const assign = async (obj: T) => {
+        const diffs = await consumer(obj);
         if (diffs.length) {
           Object.assign(res, { [obj.id]: diffs });
         }
@@ -68,7 +74,7 @@ export default class DataStore<T extends BusinessObject> {
       return res;
     };
 
-    const res = predicate();
+    const res = await predicate();
 
     if (isArray) {
       return res;
