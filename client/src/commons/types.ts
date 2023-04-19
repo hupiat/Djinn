@@ -1,3 +1,7 @@
+// -----------------------------------------------------
+// COMMONS
+// -----------------------------------------------------
+
 export type ContextChildren =
   | JSX.Element
   | JSX.Element[]
@@ -13,14 +17,14 @@ export interface HandshakeInitDTO {
 // BUSINESS
 // -----------------------------------------------------
 
-export interface BusinessObject {
+export interface IIdentified {
   id: number;
+}
+
+export interface BusinessObject extends IIdentified {
   name: string;
   description: string;
 }
-
-export type BusinessObjectWithoutId<T extends BusinessObject> = Omit<T, "id"> &
-  Partial<Pick<T, "id">>;
 
 export type EquipmentAttributeType =
   | "int"
@@ -37,3 +41,20 @@ export interface EquipmentAttribute extends BusinessObject {
 export interface Equipment extends BusinessObject {
   attributes: EquipmentAttribute[];
 }
+
+// -----------------------------------------------------
+// OTHERS (utilities)
+// -----------------------------------------------------
+
+export type WithoutId<T extends IIdentified> = Omit<T, "id"> &
+  Partial<Pick<T, "id">>;
+
+export type OrArray<T> = T | T[];
+
+export type DicoOf_Ids_And_Fields<T extends IIdentified> = {
+  [id: number]: (keyof T)[];
+};
+
+export type DicoOf_Fields<T extends IIdentified, ValueType = string> = {
+  [field in keyof T]: ValueType;
+};

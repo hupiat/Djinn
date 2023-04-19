@@ -12,6 +12,7 @@
     "@types/node": "^16.18.23",
     "@types/react": "^18.0.33",
     "@types/react-dom": "^18.0.11",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.10.0",
@@ -19,6 +20,7 @@
     "react-scripts": "5.0.1",
     "recharts": "^2.5.0",
     "rsuite": "^5.30.0",
+    "schema-typed": "^2.1.2",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },

@@ -1,4 +1,6 @@
-import { BusinessObject, BusinessObjectWithoutId } from "../types";
+import { equalsIgnoreCase } from "../tools";
+import { BusinessObject, WithoutId, DicoOf_Ids_And_Fields } from "../types";
+import _ from "lodash";
 
 // Observable pattern
 export default class DataStore<T extends BusinessObject> {
@@ -9,11 +11,19 @@ export default class DataStore<T extends BusinessObject> {
   // data is stated then in react components
   data?: Set<T>;
 
+  // Init server API
   formatUrlThenSet(url: string, apiPrefix?: string): DataStore<T> {
     this.url = undefined;
-    url = url.trim();
     if (apiPrefix) {
-      this.url = apiPrefix + "/" + url.replaceAll(apiPrefix, "");
+      url = url.trim();
+      const split = url.split("/");
+      if (equalsIgnoreCase(split[0], apiPrefix)) {
+        split.shift();
+        url = split.join("/");
+      }
+      this.url = apiPrefix + "/" + url;
+    } else {
+      console.error("DataStore#formatUrlThenSet", apiPrefix, url);
     }
     return this;
   }
@@ -21,6 +31,57 @@ export default class DataStore<T extends BusinessObject> {
   constructor(url: string, apiPrefix?: string) {
     this.formatUrlThenSet(url, apiPrefix);
   }
+
+  // Gets diffs from remote service (will not be handled by rsuite schema-typed)
+  // --> [res: boolean, {id: fields[]}]
+  observeChanges(state: Array<T> | T): DicoOf_Ids_And_Fields<T> {
+    const isArray = Array.isArray(state);
+
+    const checkDiffs = (obj: T): (keyof T)[] => {
+      const other = this.getById(obj.id);
+      if (other) {
+        return Object.keys(other)
+          .map((key) => key as keyof T)
+          .filter((key) => !_.isEqual(obj[key], other[key]));
+      }
+      return [];
+    };
+
+    const predicate = (): DicoOf_Ids_And_Fields<T> => {
+      const res = {};
+
+      const assign = (obj: T) => {
+        const diffs = checkDiffs(obj);
+        if (diffs.length) {
+          Object.assign(res, { [obj.id]: diffs });
+        }
+      };
+
+      if (isArray) {
+        for (const obj of state) {
+          assign(obj);
+        }
+      } else {
+        assign(state);
+      }
+
+      return res;
+    };
+
+    const res = predicate();
+
+    if (isArray) {
+      return res;
+    }
+
+    if (res[state.id]) {
+      return { [state.id]: res[state.id] };
+    }
+
+    return {};
+  }
+
+  // Utilities
 
   isSync(): boolean {
     return !!this.data && !!this.url;
@@ -104,8 +165,7 @@ export default class DataStore<T extends BusinessObject> {
   }
 
   // Update store remotely
-
-  // Consistency
+  // Designed to lead backend API design itself =)
 
   private checkForSyncBeforeProcessing(): void {
     if (!this.isSync()) {
@@ -113,9 +173,7 @@ export default class DataStore<T extends BusinessObject> {
     }
   }
 
-  // Designed to lead backend API design itself =)
-
-  async add(obj: BusinessObjectWithoutId<T>): Promise<void> {
+  async add(obj: WithoutId<T>): Promise<void> {
     this.checkForSyncBeforeProcessing();
     await DataStore.doFetch(this.url!, async (url) => {
       const res = await fetch(url, {
