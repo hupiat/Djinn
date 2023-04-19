@@ -7,7 +7,7 @@ export type ContextChildren =
   | JSX.Element[]
   | Array<JSX.Element | undefined>;
 
-export type DML_Operation = "add" | "edit" | "delete";
+export type WorkflowStep = "read" | "add" | "edit" | "delete";
 
 export interface HandshakeInitDTO {
   apiPrefix: string;
