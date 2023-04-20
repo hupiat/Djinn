@@ -4,10 +4,8 @@ export const getCSSVar = (name: string): string =>
 export const equalsIgnoreCase = (first?: string, other?: string): boolean => {
   if (!first && !other) {
     return true;
-  } else if (first || other) {
+  } else if (!first || !other) {
     return false;
   }
-  return (
-    first!.trim().toLocaleLowerCase() === other!.trim().toLocaleLowerCase()
-  );
+  return first.trim().toLocaleLowerCase() === other.trim().toLocaleLowerCase();
 };

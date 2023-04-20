@@ -19,7 +19,7 @@ public class ErrorController extends ResponseEntityExceptionHandler {
 		request);
     }
 
-    @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
+    @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class, IllegalAccessError.class })
     protected ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
 	return handleExceptionInternal(ex, "Malformed query or internal corruption, see for details : ",
 		new HttpHeaders(), HttpStatus.BAD_REQUEST, request);

@@ -26,7 +26,7 @@ const MiddlewareContext = ({ children }: IProps) => {
         setHandshakeInit(await res.json());
       });
     }
-  }, [setHandshakeInit]);
+  }, [handshakeInit, setHandshakeInit]);
 
   return (
     <SetupMiddlewareContext.Provider

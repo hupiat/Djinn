@@ -1,22 +1,27 @@
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import {
+  useDeferredValue,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import DataStore from "./DataStore";
 import { BusinessObject, Equipment } from "../types";
 import { PATH_EQUIPMENTS } from "../../components/Sidebar/paths";
 import { useMiddlewareContext } from "./context";
 
-type StoreSnapshot<T extends BusinessObject> = [
-  Array<T> | undefined,
-  DataStore<T>
-];
+type StoreSnapshot<T extends BusinessObject> = [Array<T> | null, DataStore<T>];
 
 // Initialization
 
-const useStoreData = <T extends BusinessObject>(
-  store: DataStore<T>
-): T[] | undefined => {
-  const [data, setData] = useState<T[]>();
+const useStoreData = <T extends BusinessObject>(store: DataStore<T>) => {
+  const [data, setData] = useState<T[] | null>(null);
+  const dataDeferred = useDeferredValue(data);
+  const storeDataDeferred = useDeferredValue(
+    store.isSync() ? [...store.data!] : null
+  );
 
-  useSyncExternalStore(
+  return useSyncExternalStore<T[] | null>(
     () => {
       const suscriber = (data: Set<T>) => setData([...data]);
 
@@ -36,11 +41,9 @@ const useStoreData = <T extends BusinessObject>(
 
       return () => store.unsubscribe(suscriber);
     },
-    () => data,
-    () => (store.isSync() ? [...store.data!] : null)
+    () => dataDeferred,
+    () => storeDataDeferred
   );
-
-  return data;
 };
 
 // Creation
