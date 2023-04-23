@@ -26,20 +26,20 @@ export interface BusinessObject extends IIdentified {
   description: string;
 }
 
-export type EquipmentAttributeType =
+export type AssetAttributeType =
   | "int"
   | "double"
   | "date"
   | "string"
   | "boolean";
 
-export interface EquipmentAttribute extends BusinessObject {
-  type: EquipmentAttributeType;
+export interface AssetAttribute extends BusinessObject {
+  type: AssetAttributeType;
   value?: number | Date | string | boolean;
 }
 
-export interface Equipment extends BusinessObject {
-  attributes: EquipmentAttribute[];
+export interface Asset extends BusinessObject {
+  attributes: AssetAttribute[];
 }
 
 // -----------------------------------------------------

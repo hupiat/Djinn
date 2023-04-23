@@ -1,4 +1,4 @@
-package hupiat.intranet.server.equipments;
+package hupiat.intranet.server.assets;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -6,23 +6,23 @@ import java.util.Set;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+import hupiat.intranet.server.assets.attributes.AssetAttribute;
 import hupiat.intranet.server.core.entities.AbstractEntityObject;
-import hupiat.intranet.server.equipments.attributes.EquipmentAttribute;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Equipment extends AbstractEntityObject<Short> {
+public class Asset extends AbstractEntityObject<Short> {
 
     @Cascade(CascadeType.ALL)
     @OneToMany
-    private Set<EquipmentAttribute> attributes = new LinkedHashSet<>();
+    private Set<AssetAttribute> attributes = new LinkedHashSet<>();
 
-    public Set<EquipmentAttribute> getAttributes() {
+    public Set<AssetAttribute> getAttributes() {
 	return attributes;
     }
 
-    public void setAttributes(Set<EquipmentAttribute> attributes) {
+    public void setAttributes(Set<AssetAttribute> attributes) {
 	this.attributes = attributes;
     }
 

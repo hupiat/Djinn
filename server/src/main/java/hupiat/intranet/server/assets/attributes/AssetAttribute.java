@@ -1,4 +1,4 @@
-package hupiat.intranet.server.equipments.attributes;
+package hupiat.intranet.server.assets.attributes;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -12,19 +12,19 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 
 @Entity
-public class EquipmentAttribute extends AbstractEntityObject<Long> {
+public class AssetAttribute extends AbstractEntityObject<Long> {
 
     @Enumerated(EnumType.STRING)
-    private EquipmentAttributeType type;
+    private AssetAttributeType type;
 
     @Nullable
     private String value;
 
-    public EquipmentAttributeType getType() {
+    public AssetAttributeType getType() {
 	return type;
     }
 
-    public void setType(EquipmentAttributeType type) {
+    public void setType(AssetAttributeType type) {
 	this.type = type;
     }
 
@@ -35,29 +35,29 @@ public class EquipmentAttribute extends AbstractEntityObject<Long> {
 
     public void setValue(@Nullable Object value) {
 	if (value != null) {
-	    EquipmentAttributeType.checkTypeOrThrow(value.getClass());
+	    AssetAttributeType.checkTypeOrThrow(value.getClass());
 	    this.value = String.valueOf(value);
 	}
     }
 
-    private void checkTypeMismatch(Predicate<EquipmentAttributeType> predicate) {
+    private void checkTypeMismatch(Predicate<AssetAttributeType> predicate) {
 	if (!predicate.test(type)) {
 	    throw new IllegalAccessError(String.format("id : %l , type : %s", id, type.name()));
 	}
     }
 
     public Integer getIntegerValueCopy() {
-	checkTypeMismatch(t -> t == EquipmentAttributeType.INT);
+	checkTypeMismatch(t -> t == AssetAttributeType.INT);
 	return Integer.parseInt(value);
     }
 
     public Double getDoubleValueCopy() {
-	checkTypeMismatch(t -> t == EquipmentAttributeType.DOUBLE);
+	checkTypeMismatch(t -> t == AssetAttributeType.DOUBLE);
 	return Double.parseDouble(value);
     }
 
     public Date getDateValueCopy() {
-	checkTypeMismatch(t -> t == EquipmentAttributeType.DATE);
+	checkTypeMismatch(t -> t == AssetAttributeType.DATE);
 	try {
 	    return DateFormat.getDateInstance().parse(value);
 	} catch (ParseException e) {
@@ -66,7 +66,7 @@ public class EquipmentAttribute extends AbstractEntityObject<Long> {
     }
 
     public Boolean getBooleanValueCopy() {
-	checkTypeMismatch(t -> t == EquipmentAttributeType.BOOLEAN);
+	checkTypeMismatch(t -> t == AssetAttributeType.BOOLEAN);
 	return Boolean.parseBoolean(value);
     }
 }

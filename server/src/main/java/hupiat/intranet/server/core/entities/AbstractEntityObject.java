@@ -50,6 +50,7 @@ public abstract class AbstractEntityObject<ID> implements Serializable {
 	return Objects.hash(id);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object obj) {
 	if (this == obj)

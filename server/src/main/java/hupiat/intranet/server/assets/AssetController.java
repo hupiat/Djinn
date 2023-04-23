@@ -1,4 +1,4 @@
-package hupiat.intranet.server.equipments;
+package hupiat.intranet.server.assets;
 
 import java.util.List;
 
@@ -14,41 +14,41 @@ import org.springframework.web.bind.annotation.RestController;
 import hupiat.intranet.server.core.controllers.ICommonController;
 
 @RestController
-@RequestMapping(ICommonController.PATH_API_EQUIPMENTS)
-public class EquipmentController implements ICommonController {
+@RequestMapping(ICommonController.PATH_API_ASSETS)
+public class AssetController implements ICommonController {
 
-    private final EquipmentRepository equipmentRepository;
+    private final AssetRepository assetRepository;
 
-    public EquipmentController(EquipmentRepository equipmentRepository) {
+    public AssetController(AssetRepository equipmentRepository) {
 	super();
-	this.equipmentRepository = equipmentRepository;
+	this.assetRepository = equipmentRepository;
     }
 
     @GetMapping
-    public List<Equipment> getAll() {
-	return equipmentRepository.findAll();
+    public List<Asset> getAll() {
+	return assetRepository.findAll();
     }
 
     @GetMapping("{id}")
-    public Equipment getById(@PathVariable short id) {
-	return equipmentRepository.findById(id).orElseThrow();
+    public Asset getById(@PathVariable short id) {
+	return assetRepository.findById(id).orElseThrow();
     }
 
     @PostMapping
-    public Equipment add(@RequestBody Equipment equipment) {
-	return equipmentRepository.save(equipment);
+    public Asset add(@RequestBody Asset equipment) {
+	return assetRepository.save(equipment);
     }
 
     @PutMapping
-    public Equipment update(@RequestBody Equipment equipment) {
-	return equipmentRepository.save(equipment);
+    public Asset update(@RequestBody Asset equipment) {
+	return assetRepository.save(equipment);
     }
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable short id) {
-	if (!equipmentRepository.existsById(id)) {
+	if (!assetRepository.existsById(id)) {
 	    throwErrorNotFound(id);
 	}
-	equipmentRepository.deleteById(id);
+	assetRepository.deleteById(id);
     }
 }

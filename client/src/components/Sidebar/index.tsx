@@ -1,7 +1,7 @@
 import { Treemap, Trend, Visible } from "@rsuite/icons";
 import { Nav, Sidenav } from "rsuite";
 import "./styles.css";
-import { PATH_ANALYTICS, PATH_EQUIPMENTS, PATH_MONITORING } from "./paths";
+import { PATH_ANALYTICS, PATH_ASSETS, PATH_MONITORING } from "./paths";
 import { useSidebarContext } from "./context";
 import { useCallback, useTransition } from "react";
 import { useNavigate } from "react-router";
@@ -22,7 +22,7 @@ export default function Sidebar() {
   const renderNavItem = useCallback(
     (path: string, title: string) => {
       const ICONS: { [path: string]: JSX.Element } = {
-        [PATH_EQUIPMENTS]: <Treemap fill={fillActive(PATH_EQUIPMENTS)} />,
+        [PATH_ASSETS]: <Treemap fill={fillActive(PATH_ASSETS)} />,
         [PATH_MONITORING]: <Visible fill={fillActive(PATH_MONITORING)} />,
         [PATH_ANALYTICS]: <Trend fill={fillActive(PATH_ANALYTICS)} />,
       };
@@ -53,7 +53,7 @@ export default function Sidebar() {
         <Sidenav.Body>
           <h2 id="sidenav__title">INTRANET</h2>
           <Nav>
-            {renderNavItem(PATH_EQUIPMENTS, "Equipments")}
+            {renderNavItem(PATH_ASSETS, "Equipments")}
             {renderNavItem(PATH_MONITORING, "Monitoring")}
             <Nav.Menu
               eventKey={PATH_ANALYTICS}

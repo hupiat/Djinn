@@ -5,7 +5,7 @@ import DataStore from "./DataStore";
 import { PATH_METADATA } from "./paths";
 
 interface IMiddlewareContext {
-  metadataInit: HandshakeInitDTO;
+  metadataInit?: HandshakeInitDTO;
 }
 
 const SetupMiddlewareContext = React.createContext<
@@ -31,7 +31,7 @@ const MiddlewareContext = ({ children }: IProps) => {
   return (
     <SetupMiddlewareContext.Provider
       value={{
-        metadataInit: handshakeInit!,
+        metadataInit: handshakeInit,
       }}
     >
       {children}

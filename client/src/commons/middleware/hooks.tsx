@@ -6,8 +6,8 @@ import {
   useSyncExternalStore,
 } from "react";
 import DataStore from "./DataStore";
-import { BusinessObject, Equipment } from "../types";
-import { PATH_EQUIPMENTS } from "../../components/Sidebar/paths";
+import { BusinessObject, Asset } from "../types";
+import { PATH_ASSETS } from "../../components/Sidebar/paths";
 import { useMiddlewareContext } from "./context";
 
 type StoreSnapshot<T extends BusinessObject> = [Array<T> | null, DataStore<T>];
@@ -27,7 +27,7 @@ const useStoreData = <T extends BusinessObject>(store: DataStore<T>) => {
 
       const init = async () => {
         // Fetching base data (getAll)
-        if (!store.isSync()) {
+        if (!store.isSync() && store.hasAPI()) {
           await store.fetchAll();
         }
 
@@ -53,12 +53,12 @@ const useStoreDataCreate = <T extends BusinessObject>(
 ): StoreSnapshot<T> => {
   const { metadataInit } = useMiddlewareContext();
   const store = useRef<DataStore<T>>(
-    new DataStore<T>(path, metadataInit.apiPrefix)
+    new DataStore<T>(path, metadataInit?.apiPrefix)
   );
 
   useEffect(() => {
-    store.current.formatUrlThenSet(path, metadataInit.apiPrefix);
-  }, [metadataInit.apiPrefix, path]);
+    store.current.formatUrlThenSet(path, metadataInit?.apiPrefix);
+  }, [metadataInit, path]);
 
   const data = useStoreData(store.current);
   return [data, store.current];
@@ -66,5 +66,5 @@ const useStoreDataCreate = <T extends BusinessObject>(
 
 // Business
 
-export const useStoreDataEquipments = (): StoreSnapshot<Equipment> =>
-  useStoreDataCreate<Equipment>(PATH_EQUIPMENTS);
+export const useStoreDataAssets = (): StoreSnapshot<Asset> =>
+  useStoreDataCreate<Asset>(PATH_ASSETS);

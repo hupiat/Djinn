@@ -1,10 +1,10 @@
 import React from "react";
 import SidebarContext from "./components/Sidebar/context";
-import ViewEquipments from "./components/equipments/ViewEquipments";
+import ViewAssets from "./components/assets/ViewAssets";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import {
   PATH_ANALYTICS,
-  PATH_EQUIPMENTS,
+  PATH_ASSETS,
   PATH_MONITORING,
 } from "./components/Sidebar/paths";
 import MiddlewareContext from "./commons/middleware/context";
@@ -16,9 +16,9 @@ function App() {
         <SidebarContext>
           <Routes>
             <Route path={"/"} element={<></>} />
-            <Route path={PATH_EQUIPMENTS} element={<ViewEquipments />} />
-            <Route path={PATH_MONITORING} element={<ViewEquipments />} />
-            <Route path={PATH_ANALYTICS} element={<ViewEquipments />} />
+            <Route path={PATH_ASSETS} element={<ViewAssets />} />
+            <Route path={PATH_MONITORING} element={<ViewAssets />} />
+            <Route path={PATH_ANALYTICS} element={<ViewAssets />} />
           </Routes>
         </SidebarContext>
       </Router>

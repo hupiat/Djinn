@@ -22,8 +22,6 @@ export default class DataStore<T extends BusinessObject> {
         url = split.join("/");
       }
       this.url = apiPrefix + "/" + url;
-    } else {
-      console.error("DataStore#formatUrlThenSet: ", apiPrefix, url);
     }
     return this;
   }
@@ -94,11 +92,15 @@ export default class DataStore<T extends BusinessObject> {
   // Utilities
 
   isSync(): boolean {
-    return !!this.data && !!this.url;
+    return this.hasAPI() && !!this.data;
   }
 
   hasSuscribers(): boolean {
     return this.subscribers.size !== 0;
+  }
+
+  hasAPI(): boolean {
+    return !!this.url;
   }
 
   // Just to wrap requests
