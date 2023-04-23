@@ -1,9 +1,17 @@
 import { equalsIgnoreCase } from "../tools";
-import { BusinessObject, WithoutId, DicoOf_Ids_And_Fields } from "../types";
+import {
+  BusinessObject,
+  WithoutId,
+  DicoOf_Ids_And_Fields,
+  WorkflowStep,
+} from "../types";
 import _ from "lodash";
 
 // Observable pattern
 export default class DataStore<T extends BusinessObject> {
+  private static logError: (details: Error) => void;
+  private static logInfo: <T>(op: WorkflowStep, obj: T) => void;
+
   private url?: string;
   private subscribers = new Set<(data: Set<T>) => void>();
 
@@ -26,7 +34,14 @@ export default class DataStore<T extends BusinessObject> {
     return this;
   }
 
-  constructor(url: string, apiPrefix?: string) {
+  constructor(
+    url: string,
+    logError: (details: Error) => void,
+    logInfo: <T>(op: WorkflowStep, obj: T) => void,
+    apiPrefix?: string
+  ) {
+    DataStore.logError = logError;
+    DataStore.logInfo = logInfo;
     this.formatUrlThenSet(url, apiPrefix);
   }
 
@@ -103,7 +118,6 @@ export default class DataStore<T extends BusinessObject> {
     return !!this.url;
   }
 
-  // Just to wrap requests
   static async doFetch(
     url: string,
     callback: (url: string) => Promise<void>
@@ -111,8 +125,7 @@ export default class DataStore<T extends BusinessObject> {
     try {
       await callback(url);
     } catch (e) {
-      // TODO : handle this better
-      console.error(e);
+      this.logError(e as Error);
     }
   }
 
@@ -173,6 +186,7 @@ export default class DataStore<T extends BusinessObject> {
       }
       this.data.add(obj);
       this.notify();
+      DataStore.logInfo("read", obj);
     });
   }
 
@@ -197,6 +211,7 @@ export default class DataStore<T extends BusinessObject> {
       obj.id = (await res.json()).id;
       this.data!.add(obj as T);
       this.notify();
+      DataStore.logInfo("add", obj);
     });
   }
 
@@ -208,12 +223,13 @@ export default class DataStore<T extends BusinessObject> {
         body: JSON.stringify(obj),
       });
       obj = await res.json();
-      const other = this.getById(obj.id);
-      if (other) {
-        this.data!.delete(other);
+      const local = this.getById(obj.id);
+      if (local) {
+        this.data!.delete(local);
       }
       this.data!.add(obj);
       this.notify();
+      DataStore.logInfo("edit", obj);
     });
   }
 
@@ -224,12 +240,13 @@ export default class DataStore<T extends BusinessObject> {
       const res = await fetch(url, {
         method: "DELETE",
       });
-      const other = this.getById(id);
+      const local = this.getById(id);
       ok = res.ok;
-      if (other && ok) {
+      if (local && ok) {
         // query should throws an exception but nvm
-        this.data!.delete(other);
+        this.data!.delete(local);
         this.notify();
+        DataStore.logInfo("delete", local);
       }
     });
     return ok;

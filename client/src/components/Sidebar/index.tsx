@@ -53,7 +53,7 @@ export default function Sidebar() {
         <Sidenav.Body>
           <h2 id="sidenav__title">INTRANET</h2>
           <Nav>
-            {renderNavItem(PATH_ASSETS, "Equipments")}
+            {renderNavItem(PATH_ASSETS, "Assets")}
             {renderNavItem(PATH_MONITORING, "Monitoring")}
             <Nav.Menu
               eventKey={PATH_ANALYTICS}

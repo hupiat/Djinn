@@ -2,6 +2,8 @@
 // COMMONS
 // -----------------------------------------------------
 
+import { ReactNode } from "react";
+
 export type ContextChildren =
   | JSX.Element
   | JSX.Element[]
@@ -12,6 +14,18 @@ export type WorkflowStep = "read" | "add" | "edit" | "delete";
 export interface HandshakeInitDTO {
   apiPrefix: string;
 }
+
+export type FormValidating<T extends BusinessObject> = {
+  isValid: (obj: T) => boolean;
+  getErrorFields: (obj: T) => (keyof T)[];
+  getErrorMessages: (obj: T) => DicoOf_Fields<T>;
+};
+
+export type Toaster = {
+  toast: OrPromise<(message: ReactNode) => string>;
+  clear: (key: string) => void;
+  clearAll: () => void;
+};
 
 // -----------------------------------------------------
 // BUSINESS
@@ -52,6 +66,14 @@ export type WithoutId<T extends IIdentified> = Omit<T, "id"> &
 export type OrArray<T> = T | T[];
 
 export type OrUndefined<T> = T | undefined;
+
+export type OrPromise<
+  T extends ((...args: any) => any) | ((...args: any) => Promise<any>)
+> =
+  | T
+  | (T extends (...args: any) => any
+      ? (...args: any) => Promise<ReturnType<T>>
+      : T);
 
 export type DicoOf_Ids_And_Fields<T extends IIdentified> = {
   [id: number]: (keyof T)[];
