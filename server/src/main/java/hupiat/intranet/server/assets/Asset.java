@@ -9,10 +9,14 @@ import org.hibernate.annotations.CascadeType;
 import hupiat.intranet.server.assets.attributes.AssetAttribute;
 import hupiat.intranet.server.core.entities.AbstractEntityObject;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 
 @Entity
 public class Asset extends AbstractEntityObject<Short> {
+
+    @Lob
+    private byte[] picture;
 
     @Cascade(CascadeType.ALL)
     @OneToMany
@@ -24,6 +28,14 @@ public class Asset extends AbstractEntityObject<Short> {
 
     public void setAttributes(Set<AssetAttribute> attributes) {
 	this.attributes = attributes;
+    }
+
+    public byte[] getPicture() {
+	return picture;
+    }
+
+    public void setPicture(byte[] picture) {
+	this.picture = picture;
     }
 
 }

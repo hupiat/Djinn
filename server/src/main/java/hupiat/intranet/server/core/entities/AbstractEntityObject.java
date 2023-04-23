@@ -15,7 +15,7 @@ public abstract class AbstractEntityObject<ID> implements Serializable {
     @GeneratedValue
     protected ID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     protected String name;
 
     @Column(columnDefinition = "TEXT", nullable = false)
