@@ -17,8 +17,8 @@ function App() {
           <Routes>
             <Route path={"/"} element={<></>} />
             <Route path={PATH_ASSETS} element={<ViewAssets />} />
-            <Route path={PATH_MONITORING} element={<ViewAssets />} />
-            <Route path={PATH_ANALYTICS} element={<ViewAssets />} />
+            <Route path={PATH_MONITORING} element={<></>} />
+            <Route path={PATH_ANALYTICS} element={<></>} />
           </Routes>
         </SidebarContext>
       </Router>

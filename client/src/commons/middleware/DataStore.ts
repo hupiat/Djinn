@@ -120,10 +120,10 @@ export default class DataStore<T extends BusinessObject> {
 
   static async doFetch(
     url: string,
-    callback: (url: string) => Promise<void>
-  ): Promise<void> {
+    callback: (url: string) => Promise<Response>
+  ): Promise<Response | undefined> {
     try {
-      await callback(url);
+      return await callback(url);
     } catch (e) {
       this.logError(e as Error);
     }
@@ -169,6 +169,7 @@ export default class DataStore<T extends BusinessObject> {
       const res = await fetch(url);
       this.data = new Set(await res.json());
       this.notify();
+      return res;
     });
   }
 
@@ -187,6 +188,7 @@ export default class DataStore<T extends BusinessObject> {
       this.data.add(obj);
       this.notify();
       DataStore.logInfo("read", obj);
+      return res;
     });
   }
 
@@ -212,6 +214,7 @@ export default class DataStore<T extends BusinessObject> {
       this.data!.add(obj as T);
       this.notify();
       DataStore.logInfo("add", obj);
+      return res;
     });
   }
 
@@ -230,6 +233,7 @@ export default class DataStore<T extends BusinessObject> {
       this.data!.add(obj);
       this.notify();
       DataStore.logInfo("edit", obj);
+      return res;
     });
   }
 
@@ -248,6 +252,7 @@ export default class DataStore<T extends BusinessObject> {
         this.notify();
         DataStore.logInfo("delete", local);
       }
+      return res;
     });
     return ok;
   }
