@@ -42,7 +42,10 @@ export interface BusinessObject extends IIdentified {
   description: string;
 }
 
-export interface Account extends BusinessObject {}
+export interface Account extends BusinessObject {
+  // Will not be present from fetching, even encrypted
+  password: string;
+}
 
 export type AssetAttributeType =
   | "int"
