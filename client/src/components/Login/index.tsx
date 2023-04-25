@@ -42,8 +42,17 @@ export default function Login() {
 
   const toaster = useMyToaster("Login", "error", () => setPassVisible(false));
 
-  if (!!user) {
+  if (!!user && !transitionPending) {
+    // Don't wait for render lifecycle at login, despite that.
+    // It would be a bad practice, we are handling an unexisting case
+    // but avoiding maybe browser's related bugs. This component is
+    // purely internally js managed despite all. (no uri)
     startTransition(() => navigate(PATH_ROOT));
+
+    // Be sure it sounds being a bug (-:
+    const error = "Login() frontend unauthorized access : ";
+    localStorage.setItem(error, Date.now().toString());
+    console.error(error);
   }
 
   const handleCardClick = () => {
