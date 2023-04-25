@@ -10,6 +10,7 @@ import { useMiddlewareContext } from "../../commons/middleware/context";
 import { PATH_LOGIN } from "../../commons/middleware/paths";
 import { useNavigate } from "react-router";
 import { PATH_ROOT } from "../Sidebar/paths";
+import { useMyToast } from "../../commons/hooks";
 
 const schema = SchemaModel<Account>({
   id: NumberType(),
@@ -41,6 +42,8 @@ export default function Login() {
   const navigate = useNavigate();
   const [transitionPending, startTransition] = useTransition();
 
+  const toaster = useMyToast("Login", "error", () => setPassVisible(false));
+
   if (!!user) {
     startTransition(() => navigate(PATH_ROOT));
   }
@@ -64,7 +67,9 @@ export default function Login() {
           setUser(await res.json());
           return res;
         }
-      ).then(() => navigate(PATH_ROOT));
+      )
+        .then(() => navigate(PATH_ROOT))
+        .catch(() => toaster.toast("Bad credentials"));
     });
 
   return (
