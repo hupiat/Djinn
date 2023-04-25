@@ -62,11 +62,15 @@ export default function Login() {
         async (url) => {
           const res = await fetch(url, {
             method: "POST",
-            body: JSON.stringify(typing),
+            body: JSON.stringify({
+              principal: typing.name,
+              credentials: typing.password,
+            }),
           });
           setUser(await res.json());
           return res;
-        }
+        },
+        false
       )
         .then(() => navigate(PATH_ROOT))
         .catch(() => toaster.toast("Bad credentials"));

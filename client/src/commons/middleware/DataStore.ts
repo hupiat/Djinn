@@ -120,12 +120,15 @@ export default class DataStore<T extends BusinessObject> {
 
   static async doFetch(
     url: string,
-    callback: (url: string) => Promise<Response>
+    callback: (url: string) => Promise<Response>,
+    shouldLog: boolean = true
   ): Promise<Response | undefined> {
     try {
       return await callback(url);
     } catch (e) {
-      this.logError(e as Error);
+      if (shouldLog) {
+        this.logError(e as Error);
+      }
     }
   }
 
