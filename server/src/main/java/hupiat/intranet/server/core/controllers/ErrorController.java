@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -12,6 +13,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ErrorController extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(value = AuthenticationException.class)
+    protected ResponseEntity<Object> handleAuthError(RuntimeException ex, WebRequest request) {
+	return handleExceptionInternal(ex, "Not enough rights", new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
+    }
 
     @ExceptionHandler(value = Exception.class)
     protected ResponseEntity<Object> handleInternalError(RuntimeException ex, WebRequest request) {
