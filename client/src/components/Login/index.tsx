@@ -1,6 +1,6 @@
 import { useDeferredValue, useState, useTransition } from "react";
 import { Account } from "../../commons/types";
-import { NumberType, SchemaModel, StringType } from "schema-typed";
+import { SchemaModel, StringType } from "schema-typed";
 import { Button, ButtonToolbar, Form, InputGroup } from "rsuite";
 import "./styles.css";
 import { Branch, EyeClose, Send, UserBadge, Visible } from "@rsuite/icons";
@@ -10,10 +10,11 @@ import { useMiddlewareContext } from "../../commons/middleware/context";
 import { PATH_LOGIN } from "../../commons/middleware/paths";
 import { useNavigate } from "react-router";
 import { PATH_ROOT } from "../Sidebar/paths";
-import { useMyToast } from "../../commons/hooks";
+import { useMyToaster } from "../../commons/hooks";
 
-const schema = SchemaModel<Account>({
-  id: NumberType(),
+type AccountTypingTokenDTO = Pick<Account, "name"> & Pick<Account, "password">;
+
+const schema = SchemaModel<AccountTypingTokenDTO>({
   name: StringType()
     .isRequired()
     .rangeLength(MIN_LENGTH_COMMON, MAX_LENGTH_COMMON),
@@ -24,25 +25,22 @@ const schema = SchemaModel<Account>({
     .containsNumber()
     .containsUppercaseLetter()
     .containsLowercaseLetter(),
-  description: StringType(),
 });
 
-const defaultState: Account = {
-  id: -1,
+const defaultState: AccountTypingTokenDTO = {
   name: "",
   password: "",
-  description: "",
 };
 
 export default function Login() {
   const { metadataInit, user, setUser } = useMiddlewareContext();
   const [isPassVisible, setPassVisible] = useState<boolean>(false);
-  const [typing, setTyping] = useState<Account>(defaultState);
+  const [typing, setTyping] = useState<AccountTypingTokenDTO>(defaultState);
   const deferredTyping = useDeferredValue(typing);
   const navigate = useNavigate();
   const [transitionPending, startTransition] = useTransition();
 
-  const toaster = useMyToast("Login", "error", () => setPassVisible(false));
+  const toaster = useMyToaster("Login", "error", () => setPassVisible(false));
 
   if (!!user) {
     startTransition(() => navigate(PATH_ROOT));

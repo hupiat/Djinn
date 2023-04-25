@@ -17,12 +17,6 @@ export interface HandshakeInitDTO {
   apiPrefix: string;
 }
 
-export type FormValidating<T extends BusinessObject> = {
-  isValid: (obj: T) => boolean;
-  getErrorFields: (obj: T) => (keyof T)[];
-  getErrorMessages: (obj: T) => DicoOf_Fields<T>;
-};
-
 export type Toaster = {
   toast: OrPromise<(message: ReactNode) => string>;
   clear: (key: string) => void;

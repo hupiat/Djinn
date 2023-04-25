@@ -129,6 +129,7 @@ export default class DataStore<T extends BusinessObject> {
       if (shouldLog) {
         this.logError(e as Error);
       }
+      throw e;
     }
   }
 

@@ -18,7 +18,7 @@ export function getToastApiMessage<T extends BusinessObject>(
   );
 }
 
-export const useMyToast = (
+export const useMyToaster = (
   header: string,
   type: MessageType = "info",
   onClose: () => void = () => {},

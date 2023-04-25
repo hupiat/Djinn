@@ -6,6 +6,7 @@ import {
   PATH_ANALYTICS,
   PATH_ASSETS,
   PATH_MONITORING,
+  PATH_ROOT,
 } from "./components/Sidebar/paths";
 import { useMiddlewareContext } from "./commons/middleware/context";
 import Login from "./components/Login";
@@ -19,7 +20,7 @@ function App() {
       ) : (
         <SidebarContext>
           <Routes>
-            <Route path={"/"} element={<></>} />
+            <Route path={PATH_ROOT} element={<ViewAssets />} />
             <Route path={PATH_ASSETS} element={<ViewAssets />} />
             <Route path={PATH_MONITORING} element={<></>} />
             <Route path={PATH_ANALYTICS} element={<></>} />

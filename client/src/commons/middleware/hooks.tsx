@@ -9,7 +9,7 @@ import DataStore from "./DataStore";
 import { BusinessObject, Asset, WorkflowStep, ResponseType } from "../types";
 import { PATH_ASSETS } from "../../components/Sidebar/paths";
 import { useMiddlewareContext } from "./context";
-import { getToastApiMessage, useMyToast } from "../hooks";
+import { getToastApiMessage, useMyToaster } from "../hooks";
 
 type StoreSnapshot<T extends BusinessObject> = [Array<T> | null, DataStore<T>];
 
@@ -62,8 +62,8 @@ const useStoreDataCreate = <T extends BusinessObject>(
 ): StoreSnapshot<T> => {
   // Toasts
   const title = "DataStore";
-  const toasterInfo = useMyToast(title);
-  const toasterError = useMyToast(title, "error");
+  const toasterInfo = useMyToaster(title);
+  const toasterError = useMyToaster(title, "error");
 
   const logError = (details: Error) => {
     console.error(details);
@@ -138,8 +138,8 @@ export function useFetchOnce<T>(
   const isPended = useRef<boolean>(false);
   useEffect(() => {
     if (!isPended.current) {
+      isPended.current = true;
       const init = async () => {
-        isPended.current = true;
         res.current = await consumer();
         if (setter) {
           let parsed;
