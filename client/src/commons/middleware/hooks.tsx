@@ -6,7 +6,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import DataStore from "./DataStore";
-import { BusinessObject, Asset, WorkflowStep } from "../types";
+import { BusinessObject, Asset, WorkflowStep, ResponseType } from "../types";
 import { PATH_ASSETS } from "../../components/Sidebar/paths";
 import { useMiddlewareContext } from "./context";
 import { getToastApiMessage, useMyToast } from "../hooks";
@@ -15,7 +15,10 @@ type StoreSnapshot<T extends BusinessObject> = [Array<T> | null, DataStore<T>];
 
 // Initialization (synchro to API, data fetch)
 
-const useStoreData = <T extends BusinessObject>(store: DataStore<T>) => {
+const useStoreData = <T extends BusinessObject>(
+  store: DataStore<T>,
+  fetchAll: boolean
+) => {
   const [data, setData] = useState<T[] | null>(null);
   const dataDeferred = useDeferredValue(data);
   const storeDataDeferred = useDeferredValue(
@@ -29,7 +32,11 @@ const useStoreData = <T extends BusinessObject>(store: DataStore<T>) => {
       const init = async () => {
         // Fetching base data (getAll)
         if (!store.isSync() && store.hasAPI()) {
-          await store.fetchAll();
+          if (fetchAll) {
+            await store.fetchAll();
+          } else {
+            store.emptySynchronize();
+          }
         }
 
         // Then suscribing changes
@@ -50,7 +57,8 @@ const useStoreData = <T extends BusinessObject>(store: DataStore<T>) => {
 // Creation
 
 const useStoreDataCreate = <T extends BusinessObject>(
-  path: string
+  path: string,
+  fetchAll: boolean = true
 ): StoreSnapshot<T> => {
   // Toasts
   const title = "DataStore";
@@ -60,9 +68,7 @@ const useStoreDataCreate = <T extends BusinessObject>(
   const logError = (details: Error) => {
     console.error(details);
     toasterError.toast(
-      getToastApiMessage(
-        "Error occurred : " + details.name + ", see details in console"
-      )
+      getToastApiMessage(details.name + " (see details in console)")
     );
   };
 
@@ -112,7 +118,7 @@ const useStoreDataCreate = <T extends BusinessObject>(
     };
   }, [metadataInit, path, toasterError, toasterInfo]);
 
-  const data = useStoreData(store.current);
+  const data = useStoreData(store.current, fetchAll);
   return [data, store.current];
 };
 
@@ -120,3 +126,39 @@ const useStoreDataCreate = <T extends BusinessObject>(
 
 export const useStoreDataAssets = (): StoreSnapshot<Asset> =>
   useStoreDataCreate<Asset>(PATH_ASSETS);
+
+// Others (utilities)
+
+export function useFetchOnce<T>(
+  consumer: () => Promise<Response>,
+  dataType?: ResponseType,
+  setter?: React.Dispatch<React.SetStateAction<T>>
+) {
+  const res = useRef<Response>();
+  const isPended = useRef<boolean>(false);
+  useEffect(() => {
+    if (!isPended.current) {
+      const init = async () => {
+        isPended.current = true;
+        res.current = await consumer();
+        if (setter) {
+          let parsed;
+          switch (dataType) {
+            case "json":
+              parsed = await res.current.json();
+              break;
+            case "blob":
+              parsed = await res.current.blob();
+              break;
+            case "text":
+              parsed = await res.current.text();
+          }
+          setter(parsed);
+        }
+      };
+      init();
+    }
+  }, [consumer, dataType, setter]);
+
+  return res.current;
+}

@@ -11,6 +11,8 @@ export type ContextChildren =
 
 export type WorkflowStep = "read" | "add" | "edit" | "delete";
 
+export type ResponseType = "json" | "text" | "blob";
+
 export interface HandshakeInitDTO {
   apiPrefix: string;
 }
@@ -40,6 +42,8 @@ export interface BusinessObject extends IIdentified {
   description: string;
 }
 
+export interface Account extends BusinessObject {}
+
 export type AssetAttributeType =
   | "int"
   | "double"
@@ -63,9 +67,9 @@ export interface Asset extends BusinessObject {
 export type WithoutId<T extends IIdentified> = Omit<T, "id"> &
   Partial<Pick<T, "id">>;
 
-export type OrArray<T> = T | T[];
+export type OrArray<T> = T extends Array<T> ? T[] : T;
 
-export type OrUndefined<T> = T | undefined;
+export type OrUndefined<T> = T extends undefined ? undefined : T;
 
 export type OrPromise<
   T extends ((...args: any) => any) | ((...args: any) => Promise<any>)

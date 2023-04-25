@@ -4,13 +4,16 @@ import "./index.css";
 import "rsuite/dist/rsuite.min.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import MiddlewareContext from "./commons/middleware/context";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <MiddlewareContext>
+      <App />
+    </MiddlewareContext>
   </React.StrictMode>
 );
 

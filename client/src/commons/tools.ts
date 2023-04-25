@@ -1,3 +1,6 @@
+export const MIN_LENGTH_COMMON = 6;
+export const MAX_LENGTH_COMMON = 64;
+
 export const getCSSVar = (name: string): string =>
   getComputedStyle(document.documentElement).getPropertyValue(name);
 

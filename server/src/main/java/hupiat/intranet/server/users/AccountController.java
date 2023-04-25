@@ -1,5 +1,9 @@
 package hupiat.intranet.server.users;
 
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,12 +11,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AccountController {
 
-    private record AccountDTO(String login, String password) {
-    }
+	private final AuthenticationProvider accountAuthProvider;
+	private final AccountRepository accountRepository;
 
-    @PostMapping
-    Account login(@RequestBody AccountDTO accountDTO) {
-	// SecurityContext
-	// SecurityContextHolder.getContext().setAuthentication(null);
-    }
+	public AccountController(AuthenticationProvider accountAuthProvider, AccountRepository accountRepository) {
+		super();
+		this.accountAuthProvider = accountAuthProvider;
+		this.accountRepository = accountRepository;
+	}
+
+	@PostMapping
+	Account login(@RequestBody UsernamePasswordAuthenticationToken token) {
+		Authentication auth = accountAuthProvider.authenticate(token);
+		Account account = accountRepository.findByName(token.getName()).orElseThrow();
+		SecurityContextHolder.getContext().setAuthentication(auth);
+		account.setPassword(null);
+		return account;
+	}
 }

@@ -1,0 +1,50 @@
+#login__root {
+  display: flex;
+  flex-direction: column;
+}
+
+#login__container,
+#login__root {
+  justify-content: center;
+}
+
+#login__root > h1,
+#login__container {
+  display: flex;
+  position: relative;
+}
+
+#login__container {
+  top: 25vh;
+}
+
+#login__container > form {
+  width: 25vw;
+}
+
+#login__container > form label {
+  color: #ffffff;
+}
+
+#login__container > form input {
+  margin: 1vh 0vw;
+}
+
+#login__root > h1 {
+  font-family: math;
+  font-size: 5rem;
+  flex-direction: column-reverse;
+  width: 100vw;
+  align-items: center;
+  top: 15vh;
+}
+
+#login__root > h1 > svg {
+  position: relative;
+  top: 20px;
+}
+
+#login__root > h1,
+#login__root > h1 > svg {
+  align-self: center;
+}

@@ -11,31 +11,33 @@ import hupiat.intranet.server.core.entities.AbstractEntityObject;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 public class Asset extends AbstractEntityObject<Short> {
 
-    @Lob
-    private byte[] picture;
+	@Lob
+	@NotEmpty
+	private byte[] picture;
 
-    @Cascade(CascadeType.ALL)
-    @OneToMany
-    private Set<AssetAttribute> attributes = new LinkedHashSet<>();
+	@Cascade(CascadeType.ALL)
+	@OneToMany
+	private Set<AssetAttribute> attributes = new LinkedHashSet<>();
 
-    public Set<AssetAttribute> getAttributes() {
-	return attributes;
-    }
+	public Set<AssetAttribute> getAttributes() {
+		return attributes;
+	}
 
-    public void setAttributes(Set<AssetAttribute> attributes) {
-	this.attributes = attributes;
-    }
+	public void setAttributes(Set<AssetAttribute> attributes) {
+		this.attributes = attributes;
+	}
 
-    public byte[] getPicture() {
-	return picture;
-    }
+	public byte[] getPicture() {
+		return picture;
+	}
 
-    public void setPicture(byte[] picture) {
-	this.picture = picture;
-    }
+	public void setPicture(byte[] picture) {
+		this.picture = picture;
+	}
 
 }

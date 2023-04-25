@@ -1,11 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useContext } from "react";
-import { ContextChildren, HandshakeInitDTO } from "../../commons/types";
+import {
+  Account,
+  ContextChildren,
+  HandshakeInitDTO,
+} from "../../commons/types";
 import DataStore from "./DataStore";
 import { PATH_METADATA } from "./paths";
+import { useFetchOnce } from "./hooks";
 
 interface IMiddlewareContext {
   metadataInit?: HandshakeInitDTO;
+  user: Account | null;
+  setUser: Dispatch<SetStateAction<Account | null>>;
 }
 
 const SetupMiddlewareContext = React.createContext<
@@ -17,24 +24,25 @@ interface IProps {
 }
 
 const MiddlewareContext = ({ children }: IProps) => {
+  const [user, setUser] = useState<Account | null>(null);
   const [handshakeInit, setHandshakeInit] = useState<HandshakeInitDTO>();
-  const isInit = useRef<boolean>(false);
 
-  useEffect(() => {
-    if (!isInit.current) {
-      isInit.current = true;
-      DataStore.doFetch(PATH_METADATA, async (url) => {
-        const res = await fetch(url + "/handshake");
-        setHandshakeInit(await res.json());
-        return res;
-      });
-    }
-  }, [handshakeInit, setHandshakeInit]);
+  useFetchOnce(
+    async () =>
+      (await DataStore.doFetch(
+        PATH_METADATA,
+        async (url) => await fetch(url + "/handshake")
+      )) as Response,
+    "json",
+    setHandshakeInit
+  );
 
   return (
     <SetupMiddlewareContext.Provider
       value={{
         metadataInit: handshakeInit,
+        user,
+        setUser,
       }}
     >
       {children}

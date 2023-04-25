@@ -12,43 +12,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import hupiat.intranet.server.core.controllers.ICommonController;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(ICommonController.PATH_API_ASSETS)
 public class AssetController implements ICommonController {
 
-    private final AssetRepository assetRepository;
+	private final AssetRepository assetRepository;
 
-    public AssetController(AssetRepository equipmentRepository) {
-	super();
-	this.assetRepository = equipmentRepository;
-    }
-
-    @GetMapping
-    public List<Asset> getAll() {
-	return assetRepository.findAll();
-    }
-
-    @GetMapping("{id}")
-    public Asset getById(@PathVariable short id) {
-	return assetRepository.findById(id).orElseThrow();
-    }
-
-    @PostMapping
-    public Asset add(@RequestBody Asset equipment) {
-	return assetRepository.save(equipment);
-    }
-
-    @PutMapping
-    public Asset update(@RequestBody Asset equipment) {
-	return assetRepository.save(equipment);
-    }
-
-    @DeleteMapping("{id}")
-    public void delete(@PathVariable short id) {
-	if (!assetRepository.existsById(id)) {
-	    throwErrorNotFound(id);
+	public AssetController(AssetRepository equipmentRepository) {
+		super();
+		this.assetRepository = equipmentRepository;
 	}
-	assetRepository.deleteById(id);
-    }
+
+	@GetMapping
+	public List<Asset> getAll() {
+		return assetRepository.findAll();
+	}
+
+	@GetMapping("{id}")
+	public Asset getById(@PathVariable short id) {
+		return assetRepository.findById(id).orElseThrow();
+	}
+
+	@PostMapping
+	public Asset add(@RequestBody @Valid Asset equipment) {
+		return assetRepository.save(equipment);
+	}
+
+	@PutMapping
+	public Asset update(@RequestBody @Valid Asset equipment) {
+		return assetRepository.save(equipment);
+	}
+
+	@DeleteMapping("{id}")
+	public void delete(@PathVariable short id) {
+		if (!assetRepository.existsById(id)) {
+			throwErrorNotFound(id);
+		}
+		assetRepository.deleteById(id);
+	}
 }

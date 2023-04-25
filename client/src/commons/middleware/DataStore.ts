@@ -160,6 +160,16 @@ export default class DataStore<T extends BusinessObject> {
     this.subscribers.delete(notify);
   }
 
+  emptySynchronize() {
+    if (!this.hasAPI) {
+      throw Error(
+        "DataStore#emptySynchronize: cannot perform unless API uri is provided"
+      );
+    }
+    this.data = new Set<T>();
+    this.notify();
+  }
+
   // Loads from server
 
   async fetchAll(): Promise<void> {

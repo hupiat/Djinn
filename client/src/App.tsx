@@ -7,12 +7,16 @@ import {
   PATH_ASSETS,
   PATH_MONITORING,
 } from "./components/Sidebar/paths";
-import MiddlewareContext from "./commons/middleware/context";
+import { useMiddlewareContext } from "./commons/middleware/context";
+import Login from "./components/Login";
 
 function App() {
+  const { user } = useMiddlewareContext();
   return (
-    <MiddlewareContext>
-      <Router>
+    <Router>
+      {!user ? (
+        <Login />
+      ) : (
         <SidebarContext>
           <Routes>
             <Route path={"/"} element={<></>} />
@@ -21,8 +25,8 @@ function App() {
             <Route path={PATH_ANALYTICS} element={<></>} />
           </Routes>
         </SidebarContext>
-      </Router>
-    </MiddlewareContext>
+      )}
+    </Router>
   );
 }
 
