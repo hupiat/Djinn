@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useContext } from "react";
 import { ContextChildren, HandshakeInitDTO } from "../../commons/types";
 import DataStore from "./DataStore";
@@ -18,12 +18,15 @@ interface IProps {
 
 const MiddlewareContext = ({ children }: IProps) => {
   const [handshakeInit, setHandshakeInit] = useState<HandshakeInitDTO>();
+  const isInit = useRef<boolean>(false);
 
   useEffect(() => {
-    if (!handshakeInit) {
+    if (!isInit.current) {
+      isInit.current = true;
       DataStore.doFetch(PATH_METADATA, async (url) => {
         const res = await fetch(url + "/handshake");
         setHandshakeInit(await res.json());
+        return res;
       });
     }
   }, [handshakeInit, setHandshakeInit]);
