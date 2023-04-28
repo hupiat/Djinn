@@ -6,10 +6,22 @@ import {
   useSyncExternalStore,
 } from "react";
 import DataStore from "./DataStore";
-import { BusinessObject, Asset, WorkflowStep, ResponseType } from "../types";
+import {
+  BusinessObject,
+  Asset,
+  WorkflowStep,
+  ResponseType,
+  Toaster,
+} from "../types";
 import { PATH_ASSETS } from "../../components/Sidebar/paths";
 import { useMiddlewareContext } from "./context";
 import { getToastApiMessage, useMyToaster } from "../hooks";
+import {
+  NavigateFunction,
+  NavigateOptions,
+  To,
+  useNavigate,
+} from "react-router";
 
 type StoreSnapshot<T extends BusinessObject> = [Array<T> | null, DataStore<T>];
 
@@ -87,9 +99,9 @@ const useStoreDataCreate = <T extends BusinessObject>(
     };
     toasterInfo.toast(
       getToastApiMessage(
-        `${obj.name} (${obj.id}) has been ${juxtaposition()}, (description : [${
-          obj.description
-        }])`,
+        `${obj.name} (id : ${
+          obj.id
+        }) has been ${juxtaposition()}, (description : [${obj.description}])`,
         obj
       )
     );
@@ -111,11 +123,6 @@ const useStoreDataCreate = <T extends BusinessObject>(
 
   useEffect(() => {
     store.current.formatUrlThenSet(path, metadataInit?.apiPrefix);
-
-    return () => {
-      toasterInfo.clearAll();
-      toasterError.clearAll();
-    };
   }, [metadataInit, path, toasterError, toasterInfo]);
 
   const data = useStoreData(store.current, fetchAll);
@@ -162,3 +169,14 @@ export function useFetchOnce<T>(
 
   return res.current;
 }
+
+export const useMyNavigate = (toaster: Toaster): NavigateFunction => {
+  const navigate = useNavigate();
+  const myNavigate = (to: To, opts?: NavigateOptions) => {
+    toaster.clearAll();
+    navigate(to, opts);
+  };
+
+  // see for (delta: number) => void
+  return myNavigate as NavigateFunction;
+};

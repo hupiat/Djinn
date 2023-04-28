@@ -164,7 +164,7 @@ export default class DataStore<T extends BusinessObject> {
     this.subscribers.delete(notify);
   }
 
-  emptySynchronize() {
+  emptySynchronize(): void {
     if (!this.hasAPI) {
       throw Error(
         "DataStore#emptySynchronize: cannot perform unless API uri is provided"

@@ -1,30 +1,30 @@
 import { useDeferredValue, useState, useTransition } from "react";
 import { Account } from "../../commons/types";
 import { SchemaModel, StringType } from "schema-typed";
-import { Button, ButtonToolbar, Form, InputGroup } from "rsuite";
+import { Button, Form, InputGroup } from "rsuite";
 import "./styles.css";
 import { Branch, EyeClose, Send, UserBadge, Visible } from "@rsuite/icons";
 import { MAX_LENGTH_COMMON, MIN_LENGTH_COMMON } from "../../commons/tools";
 import DataStore from "../../commons/middleware/DataStore";
 import { useMiddlewareContext } from "../../commons/middleware/context";
 import { PATH_LOGIN } from "../../commons/middleware/paths";
-import { useNavigate } from "react-router";
 import { PATH_ROOT } from "../Sidebar/paths";
 import { useMyToaster } from "../../commons/hooks";
+import { useMyNavigate } from "../../commons/middleware/hooks";
 
 type AccountTypingTokenDTO = Pick<Account, "name"> & Pick<Account, "password">;
 
 const schema = SchemaModel<AccountTypingTokenDTO>({
   name: StringType()
-    .isRequired()
-    .rangeLength(MIN_LENGTH_COMMON, MAX_LENGTH_COMMON),
+    .rangeLength(MIN_LENGTH_COMMON, MAX_LENGTH_COMMON)
+    .isRequired(),
   password: StringType()
-    .isRequired()
     .rangeLength(8, MAX_LENGTH_COMMON)
     .containsLetter()
     .containsNumber()
     .containsUppercaseLetter()
-    .containsLowercaseLetter(),
+    .containsLowercaseLetter()
+    .isRequired(),
 });
 
 const defaultState: AccountTypingTokenDTO = {
@@ -37,32 +37,31 @@ export default function Login() {
   const [isPassVisible, setPassVisible] = useState<boolean>(false);
   const [typing, setTyping] = useState<AccountTypingTokenDTO>(defaultState);
   const deferredTyping = useDeferredValue(typing);
-  const navigate = useNavigate();
+  const toaster = useMyToaster("Login", "error", () => setPassVisible(false));
+  const navigate = useMyNavigate(toaster);
   const [transitionPending, startTransition] = useTransition();
 
-  const toaster = useMyToaster("Login", "error", () => setPassVisible(false));
-
   if (!!user && !transitionPending) {
+    // Be sure it sounds being a bug (-:
+    const error = "Login() frontend unauthorized access";
+    localStorage.setItem(error, Date.now().toString());
+    console.error(error);
+
     // Don't wait for render lifecycle at login, despite that.
     // It would be a bad practice, we are handling an unexisting case
     // but avoiding maybe browser's related bugs. This component is
     // purely internally js managed despite all. (no uri)
     startTransition(() => navigate(PATH_ROOT));
-
-    // Be sure it sounds being a bug (-:
-    const error = "Login() frontend unauthorized access : ";
-    localStorage.setItem(error, Date.now().toString());
-    console.error(error);
   }
 
-  const handleCardClick = () => {
+  const handleCardClick = (): void => {
     setPassVisible(false);
     setTyping(defaultState);
   };
 
-  const handlePassClick = () => setPassVisible(!isPassVisible);
+  const handlePassClick = (): void => setPassVisible(!isPassVisible);
 
-  const handleLogin = () =>
+  const handleLogin = async (): Promise<void> =>
     startTransition(() => {
       DataStore.doFetch(
         metadataInit?.apiPrefix + "/" + PATH_LOGIN,
@@ -94,43 +93,40 @@ export default function Login() {
           fluid
           formValue={deferredTyping}
           model={schema}
-          onChange={(val) => setTyping({ ...deferredTyping, ...val })}
-          onSubmit={handleLogin}
+          onChange={(val) => setTyping((typing) => ({ ...typing, ...val }))}
+          layout="vertical"
+          onSubmit={(check) => check && handleLogin()}
         >
-          <Form.Group controlId="name">
-            <InputGroup>
-              <InputGroup.Button onClick={handleCardClick} type="reset">
-                <UserBadge />
-              </InputGroup.Button>
+          <InputGroup>
+            <InputGroup.Button onClick={handleCardClick} type="reset">
+              <UserBadge />
+            </InputGroup.Button>
+            <Form.Group controlId="name">
               <Form.Control name="name" placeholder="Username" />
-            </InputGroup>
-          </Form.Group>
-          <Form.Group controlId="password">
-            <InputGroup>
-              <InputGroup.Button onClick={handlePassClick}>
-                {isPassVisible ? <Visible /> : <EyeClose />}
-              </InputGroup.Button>
+            </Form.Group>
+          </InputGroup>
+          <InputGroup>
+            <InputGroup.Button onClick={handlePassClick}>
+              {isPassVisible ? <Visible /> : <EyeClose />}
+            </InputGroup.Button>
+            <Form.Group controlId="password">
               <Form.Control
                 name="password"
                 type={isPassVisible ? undefined : "password"}
                 placeholder="Password"
               />
-            </InputGroup>
-          </Form.Group>
-          <Form.Group>
-            <ButtonToolbar>
-              <Button
-                block
-                ripple
-                appearance="primary"
-                endIcon={<Send />}
-                loading={transitionPending}
-                type="submit"
-              >
-                Login
-              </Button>
-            </ButtonToolbar>
-          </Form.Group>
+            </Form.Group>
+          </InputGroup>
+          <Button
+            block
+            ripple
+            appearance="primary"
+            endIcon={<Send />}
+            loading={transitionPending}
+            type="submit"
+          >
+            Login
+          </Button>
         </Form>
       </div>
     </div>

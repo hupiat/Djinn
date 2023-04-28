@@ -37,6 +37,7 @@
   width: 100vw;
   align-items: center;
   top: 15vh;
+  color: var(--blue-app);
 }
 
 #login__root > h1 > svg {
