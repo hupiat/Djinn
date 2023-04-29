@@ -69,8 +69,8 @@ export default function Login() {
           const res = await fetch(url, {
             method: "POST",
             body: JSON.stringify({
-              principal: typing.name,
-              credentials: typing.password,
+              login: typing.name,
+              password: typing.password,
             }),
           });
           setUser(await res.json());

@@ -50,9 +50,11 @@ public class SecurityConfigAdapter {
 										HttpMethod.PUT.toString(), HttpMethod.DELETE.toString()));
 								config.setAllowCredentials(true);
 								config.setAllowedOriginPatterns(List.of("127.0.0.1", "localhost", "192.168.*"));
+								config.validateAllowCredentials();
 								return config;
 							}
 						});
+						configurer.configure(http);
 					}
 				});
 

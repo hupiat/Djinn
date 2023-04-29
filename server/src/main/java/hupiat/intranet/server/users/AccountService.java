@@ -20,13 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import hupiat.intranet.server.core.utils.FileUtils;
 
-// Instantiated by SecurityConfigAdapter
+// Instantiated by SecurityConfigAdapter to avoid circular dependencies for password encoder
+
 public class AccountService implements UserDetailsService {
 
 	private static final Logger LOGGER = Logger.getGlobal();
 
 	private final AccountRepository accountRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	// Otherwise service would be mandatory maybe instead, to inject in config
 
 	public AccountService(AccountRepository accountRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
 		super();
@@ -45,36 +48,42 @@ public class AccountService implements UserDetailsService {
 	@Transactional(propagation = Propagation.NEVER, isolation = Isolation.SERIALIZABLE)
 	private void checkForDefaultUsers() {
 		List<Account> accounts = accountRepository.findByNameIn(Set.copyOf(USERS));
-
 		Predicate<String> predicate = u -> accounts.stream().map(Account::getName).noneMatch(a -> Objects.equals(a, u));
 
 		if (USERS.stream().anyMatch(predicate)) {
 			List<Account> toInsert = new LinkedList<>();
 			Properties local = FileUtils.readProperties(FileUtils.LOCAL_PROPERTIES);
 			Properties local_secured = null;
+
 			for (String missing : USERS.stream().filter(predicate).collect(Collectors.toList())) {
 				Object username = local.get(missing);
 				if (username == null) {
 					continue;
 				}
+
 				// Cleaning buffer for pass files
 				local_secured = FileUtils.readProperties(FileUtils.LOCAL_SEC_PROPERTIES);
 				String password = null;
 				Object tmp_password = local_secured.get(missing.split("_")[0] + "_password");
 				local_secured = null;
+
 				if (tmp_password == null) {
 					continue;
 				} else {
 					password = bCryptPasswordEncoder.encode(((String) tmp_password));
 					tmp_password = null;
 				}
+
 				Account account = new Account();
 				account.setName((String) username);
 				account.setPassword(password);
 				account.setDescription("Default user");
+
 				toInsert.add(account);
 				LOGGER.log(Level.INFO, "[" + username + "] will be inserted");
 			}
+
+			// Batched in an isolated transaction (safe for a cloud service)
 			accountRepository.saveAll(toInsert);
 		}
 	}

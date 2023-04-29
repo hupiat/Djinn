@@ -24,6 +24,8 @@ public class AccountAuthProvider implements AuthenticationProvider {
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String username = authentication.getPrincipal().toString();
+
+		// TODO : 403 for now
 		String password = bCryptPasswordEncoder.encode(authentication.getCredentials().toString());
 
 		UserDetails user;
