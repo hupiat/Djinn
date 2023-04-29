@@ -23,11 +23,11 @@ import jakarta.servlet.http.HttpServletRequest;
 @EnableWebSecurity
 public class SecurityConfigAdapter {
 
-	private final AccountService accountService;
+	private final AccountRepository accountRepository;
 
-	public SecurityConfigAdapter(AccountService accountService) {
+	public SecurityConfigAdapter(AccountRepository accountRepository) {
 		super();
-		this.accountService = accountService;
+		this.accountRepository = accountRepository;
 	}
 
 	@Bean
@@ -66,7 +66,7 @@ public class SecurityConfigAdapter {
 
 	@Bean
 	UserDetailsService userDetailsService() {
-		return accountService;
+		return new AccountService(accountRepository, bCryptPasswordEncoder());
 	}
 
 	@Bean

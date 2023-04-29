@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import hupiat.intranet.server.core.controllers.ICommonController;
+
 @RestController
 public class AccountController {
 
@@ -20,7 +22,7 @@ public class AccountController {
 		this.accountRepository = accountRepository;
 	}
 
-	@PostMapping
+	@PostMapping(ICommonController.PATH_API_LOGIN)
 	Account login(@RequestBody UsernamePasswordAuthenticationToken token) {
 		Authentication auth = accountAuthProvider.authenticate(token);
 		Account account = accountRepository.findByName(token.getName()).orElseThrow();
