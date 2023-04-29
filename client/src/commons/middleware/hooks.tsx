@@ -30,7 +30,7 @@ type StoreSnapshot<T extends BusinessObject> = [Array<T> | null, DataStore<T>];
 const useStoreData = <T extends BusinessObject>(
   store: DataStore<T>,
   fetchAll: boolean
-) => {
+): T[] | null => {
   const [data, setData] = useState<T[] | null>(null);
   const dataDeferred = useDeferredValue(data);
   const storeDataDeferred = useDeferredValue(
@@ -38,8 +38,11 @@ const useStoreData = <T extends BusinessObject>(
   );
 
   return useSyncExternalStore<T[] | null>(
-    () => {
-      const suscriber = (data: Set<T>) => setData([...data]);
+    (onStoreChange) => {
+      const suscriber = (data: Set<T>) => {
+        setData([...data]);
+        onStoreChange();
+      };
 
       const init = async () => {
         // Fetching base data (getAll)
