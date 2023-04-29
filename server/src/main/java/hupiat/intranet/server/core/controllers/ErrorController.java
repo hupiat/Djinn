@@ -1,9 +1,12 @@
 package hupiat.intranet.server.core.controllers;
 
 import java.util.NoSuchElementException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +15,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class ErrorController extends ResponseEntityExceptionHandler {
+
+	private static final Logger LOGGER = Logger.getLogger(ErrorController.class.getSimpleName());
+
+	@Override
+	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
+			HttpStatusCode statusCode, WebRequest request) {
+		LOGGER.log(Level.SEVERE, (String) body, ex);
+		return super.handleExceptionInternal(ex, body, headers, statusCode, request);
+	}
 
 	@ExceptionHandler(value = Exception.class)
 	protected ResponseEntity<Object> handleInternalError(RuntimeException ex, WebRequest request) {

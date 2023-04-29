@@ -21,8 +21,8 @@
 
 #login__container > form {
   width: 25vw;
-  height: 25vh;
-  justify-content: space-evenly;
+  height: 30vh;
+  justify-content: space-around;
 }
 
 #login__container > form label {
