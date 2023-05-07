@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hupiat.intranet.server.core.annotations.NotBlankSized;
 import hupiat.intranet.server.core.controllers.ICommonController;
+import hupiat.intranet.server.core.rules.generics.SizeRuled;
 import jakarta.validation.Valid;
 
 @RestController
@@ -26,8 +27,10 @@ public class AccountController implements ICommonController {
 		this.accountRepository = accountRepository;
 	}
 
-	private record AccountTypingTokenDTO(@NotBlankSized(min = 6, max = 64) String login,
-			@NotBlankSized(min = 8, max = 64) String password) implements Serializable {
+	private record AccountTypingTokenDTO(
+			@NotBlankSized(min = SizeRuled.MIN_VALUE, max = SizeRuled.MAX_VALUE_COMMON) String login,
+			@NotBlankSized(min = SizeRuled.MIN_VALUE_ALT, max = SizeRuled.MAX_VALUE_COMMON) String password)
+			implements Serializable {
 	}
 
 	@PostMapping(ICommonController.PATH_API_LOGIN)

@@ -1,6 +1,7 @@
 package hupiat.intranet.server.core.rules;
 
 import java.io.Serializable;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,6 +13,8 @@ public interface IRuleStubProxy extends Serializable {
 
 	String buildProxy();
 
+	Set<String> buildProxyCases();
+
 	static final Logger LOGGER = Logger.getLogger(IRuleStubProxy.class.getSimpleName());
 
 	// Should never happen
@@ -20,7 +23,7 @@ public interface IRuleStubProxy extends Serializable {
 	// Not a bug but such a bad design
 	static final String MUTATED_symbol = "#";
 
-	default String mutatedProxy(String proxy) {
+	static String mutatedProxy(String proxy) {
 		return proxy + MUTATED_symbol;
 	}
 

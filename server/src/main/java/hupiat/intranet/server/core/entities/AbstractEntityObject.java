@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import hupiat.intranet.server.core.annotations.NotBlankSized;
+import hupiat.intranet.server.core.rules.generics.SizeRuled;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -17,11 +18,11 @@ public abstract class AbstractEntityObject<ID> implements Serializable {
 	protected ID id;
 
 	@Column(columnDefinition = "character varying(64)", nullable = false, unique = true)
-	@NotBlankSized(min = 6, max = 64)
+	@NotBlankSized(min = SizeRuled.MIN_VALUE, max = SizeRuled.MAX_VALUE_COMMON)
 	protected String name;
 
 	@Column(columnDefinition = "TEXT", nullable = false)
-	@NotBlankSized(min = 6)
+	@NotBlankSized(min = SizeRuled.MIN_VALUE)
 	protected String description;
 
 	public ID getId() {

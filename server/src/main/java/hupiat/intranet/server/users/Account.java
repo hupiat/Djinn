@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import hupiat.intranet.server.core.annotations.NotBlankSized;
 import hupiat.intranet.server.core.entities.AbstractEntityObject;
+import hupiat.intranet.server.core.rules.generics.SizeRuled;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
@@ -14,7 +15,7 @@ import jakarta.persistence.Entity;
 public class Account extends AbstractEntityObject<Short> implements UserDetails {
 
 	@Column(nullable = false)
-	@NotBlankSized(min = 8, max = 64)
+	@NotBlankSized(min = SizeRuled.MIN_VALUE_ALT, max = SizeRuled.MAX_VALUE_COMMON)
 	private String password;
 
 	public void setPassword(String password) {

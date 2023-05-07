@@ -4,9 +4,9 @@ import java.util.Set;
 
 import hupiat.intranet.server.core.rules.generics.SizeRuled;
 
-public record Rules(Set<RuleStub<SizeRuled>> stubs) {
+public record Rules(Set<RuleStubBuilder<? extends IRuleStubProxy>> stubs) {
 
-//	public Rules() {
-//		// this(new Size(6))
-//	}
+	public Rules() {
+		this(Set.of(new RuleStubBuilder<SizeRuled>(SizeRuled.class)));
+	}
 }
