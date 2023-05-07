@@ -17,7 +17,7 @@ public interface ICommonController {
 	static final String PATH_API_ASSETS = API_PREFIX + "/assets";
 
 	default void throwErrorNotFound(long id) {
-		throw new NoSuchElementException("Could not found id : " + id);
+		throw new NoSuchElementException("Could not find id : " + id);
 	}
 
 	static String getRecursivePath(String path) {

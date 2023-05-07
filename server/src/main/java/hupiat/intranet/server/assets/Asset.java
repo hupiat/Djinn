@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Asset extends AbstractEntityObject<Long> {
@@ -22,6 +23,7 @@ public class Asset extends AbstractEntityObject<Long> {
 
 	@Cascade(CascadeType.ALL)
 	@OneToMany
+	@NotNull
 	private Set<AssetAttribute> attributes = new LinkedHashSet<>();
 
 	public Set<AssetAttribute> getAttributes() {
