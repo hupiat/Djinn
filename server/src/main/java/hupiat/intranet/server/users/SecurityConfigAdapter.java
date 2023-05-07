@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,7 +40,7 @@ public class SecurityConfigAdapter {
 				.permitAll().anyRequest().authenticated().and()
 				.logout(logout -> logout.logoutUrl(ICommonController.PATH_API_LOGOUT)
 						.logoutSuccessUrl(ICommonController.PATH_ROOT))
-				.cors(new Customizer<CorsConfigurer<HttpSecurity>>() {
+				.formLogin(AbstractHttpConfigurer::disable).cors(new Customizer<CorsConfigurer<HttpSecurity>>() {
 					@Override
 					public void customize(CorsConfigurer<HttpSecurity> configurer) {
 						configurer.configurationSource(new CorsConfigurationSource() {
@@ -50,6 +51,7 @@ public class SecurityConfigAdapter {
 										HttpMethod.PUT.toString(), HttpMethod.DELETE.toString()));
 								config.setAllowCredentials(true);
 								config.setAllowedOriginPatterns(List.of("127.0.0.1", "localhost", "192.168.*"));
+								config.applyPermitDefaultValues();
 								config.validateAllowCredentials();
 								return config;
 							}

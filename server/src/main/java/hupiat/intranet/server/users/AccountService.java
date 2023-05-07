@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import hupiat.intranet.server.core.utils.FileUtils;
+import io.micrometer.common.util.StringUtils;
 
 // Instantiated by SecurityConfigAdapter to avoid circular dependencies for password encoder
 
@@ -55,9 +56,10 @@ public class AccountService implements UserDetailsService {
 			Properties local = FileUtils.readProperties(FileUtils.LOCAL_PROPERTIES);
 			Properties local_secured = null;
 
+			Predicate<Object> predicateIsBlank = obj -> !(obj instanceof String) || StringUtils.isBlank((String) (obj));
 			for (String missing : USERS.stream().filter(predicate).collect(Collectors.toList())) {
 				Object username = local.get(missing);
-				if (username == null) {
+				if (predicateIsBlank.test(username)) {
 					continue;
 				}
 
@@ -67,7 +69,7 @@ public class AccountService implements UserDetailsService {
 				Object tmp_password = local_secured.get(missing.split("_")[0] + "_password");
 				local_secured = null;
 
-				if (tmp_password == null) {
+				if (predicateIsBlank.test(tmp_password)) {
 					continue;
 				} else {
 					password = bCryptPasswordEncoder.encode(((String) tmp_password));

@@ -14,7 +14,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 
 @Entity
-public class Asset extends AbstractEntityObject<Short> {
+public class Asset extends AbstractEntityObject<Long> {
 
 	@Lob
 	@NotEmpty

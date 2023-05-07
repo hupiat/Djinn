@@ -31,7 +31,7 @@ public class AssetController implements ICommonController {
 	}
 
 	@GetMapping("{id}")
-	public Asset getById(@PathVariable short id) {
+	public Asset getById(@PathVariable long id) {
 		return assetRepository.findById(id).orElseThrow();
 	}
 
@@ -46,7 +46,7 @@ public class AssetController implements ICommonController {
 	}
 
 	@DeleteMapping("{id}")
-	public void delete(@PathVariable short id) {
+	public void delete(@PathVariable long id) {
 		if (!assetRepository.existsById(id)) {
 			throwErrorNotFound(id);
 		}

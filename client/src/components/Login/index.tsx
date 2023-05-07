@@ -61,17 +61,16 @@ export default function Login() {
 
   const handlePassClick = (): void => setPassVisible(!isPassVisible);
 
-  const handleLogin = async (): Promise<void> =>
+  const handleLogin = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> =>
     startTransition(() => {
       DataStore.doFetch(
         metadataInit?.apiPrefix + "/" + PATH_LOGIN,
         async (url) => {
           const res = await fetch(url, {
             method: "POST",
-            body: JSON.stringify({
-              login: typing.name,
-              password: typing.password,
-            }),
+            body: new FormData(e.currentTarget),
           });
           setUser(await res.json());
           return res;
@@ -95,7 +94,7 @@ export default function Login() {
           model={schema}
           onChange={(val) => setTyping((typing) => ({ ...typing, ...val }))}
           layout="vertical"
-          onSubmit={(check) => check && handleLogin()}
+          onSubmit={(check, e) => check && handleLogin(e)}
         >
           <InputGroup>
             <InputGroup.Button onClick={handleCardClick} type="reset">

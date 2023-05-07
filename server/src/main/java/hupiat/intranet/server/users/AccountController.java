@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import hupiat.intranet.server.core.annotations.NotBlankSized;
 import hupiat.intranet.server.core.controllers.ICommonController;
+import jakarta.validation.Valid;
 
 @RestController
 public class AccountController implements ICommonController {
@@ -24,11 +26,12 @@ public class AccountController implements ICommonController {
 		this.accountRepository = accountRepository;
 	}
 
-	private record AccountTypingTokenDTO(String login, String password) implements Serializable {
+	private record AccountTypingTokenDTO(@NotBlankSized(min = 6, max = 64) String login,
+			@NotBlankSized(min = 8, max = 64) String password) implements Serializable {
 	}
 
 	@PostMapping(ICommonController.PATH_API_LOGIN)
-	Account login(@RequestBody AccountTypingTokenDTO token) {
+	Account login(@RequestBody @Valid AccountTypingTokenDTO token) {
 		Authentication auth = accountAuthProvider
 				.authenticate(new UsernamePasswordAuthenticationToken(token.login, token.password));
 		Account account = accountRepository.findByName(token.login).orElseThrow();

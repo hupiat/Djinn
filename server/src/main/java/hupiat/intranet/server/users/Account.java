@@ -5,18 +5,16 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import hupiat.intranet.server.core.annotations.NotBlankSized;
 import hupiat.intranet.server.core.entities.AbstractEntityObject;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Entity
 public class Account extends AbstractEntityObject<Short> implements UserDetails {
 
 	@Column(nullable = false)
-	@Size(min = 8, max = 64)
-	@NotBlank
+	@NotBlankSized(min = 8, max = 64)
 	private String password;
 
 	public void setPassword(String password) {

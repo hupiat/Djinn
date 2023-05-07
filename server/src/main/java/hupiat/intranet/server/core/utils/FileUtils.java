@@ -6,6 +6,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import jakarta.annotation.Nullable;
+
 public abstract class FileUtils {
 
 	public static final String LOCAL_PROPERTIES = "local.properties";
@@ -13,6 +15,7 @@ public abstract class FileUtils {
 
 	private static final Logger LOGGER = Logger.getLogger(FileUtils.class.getSimpleName());
 
+	@Nullable
 	public static Properties readProperties(String path) {
 		Properties prop = null;
 		String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();

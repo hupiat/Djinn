@@ -3,12 +3,11 @@ package hupiat.intranet.server.core.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import hupiat.intranet.server.core.annotations.NotBlankSized;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @MappedSuperclass
 public abstract class AbstractEntityObject<ID> implements Serializable {
@@ -18,13 +17,11 @@ public abstract class AbstractEntityObject<ID> implements Serializable {
 	protected ID id;
 
 	@Column(columnDefinition = "character varying(64)", nullable = false, unique = true)
-	@Size(min = 6, max = 64)
-	@NotBlank
+	@NotBlankSized(min = 6, max = 64)
 	protected String name;
 
 	@Column(columnDefinition = "TEXT", nullable = false)
-	@Size(min = 6)
-	@NotBlank
+	@NotBlankSized(min = 6)
 	protected String description;
 
 	public ID getId() {
