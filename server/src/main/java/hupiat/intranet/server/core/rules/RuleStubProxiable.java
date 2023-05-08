@@ -36,7 +36,7 @@ public interface RuleStubProxiable extends Serializable {
 		Preconditions.checkArgument(StringUtils.isNotBlank(proxy));
 		Preconditions.checkArgument(accumulator > 1);
 		StringBuilder sb = new StringBuilder(proxy);
-		for (int i = 0; i < accumulator; i++) {
+		for (short i = 0; i < accumulator; i++) {
 			sb.append(MUTATED_symbol);
 		}
 		return sb.toString();
