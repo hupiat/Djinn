@@ -28,6 +28,14 @@ public interface IRuleStubProxy extends Serializable {
 		return proxy + MUTATED_symbol;
 	}
 
+	static String mutatedProxy(String proxy, short accumulator) {
+		StringBuilder sb = new StringBuilder(proxy);
+		for (int i = 0; i < accumulator; i++) {
+			sb.append(MUTATED_symbol);
+		}
+		return sb.toString();
+	}
+
 	default String logInvalidProxy(String brokenMsg) {
 		LOGGER.log(Level.SEVERE, "Should be a mistake with server.core.rules proxier coderules usage :-(",
 				new IllegalStateException(brokenMsg));
