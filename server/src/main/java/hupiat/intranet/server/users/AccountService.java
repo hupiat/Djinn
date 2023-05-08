@@ -22,6 +22,7 @@ import hupiat.intranet.server.core.utils.FileUtils;
 import io.micrometer.common.util.StringUtils;
 
 // Instantiated by SecurityConfigAdapter to avoid circular dependencies for password encoder
+// Still a bean at all
 
 public class AccountService implements UserDetailsService {
 
