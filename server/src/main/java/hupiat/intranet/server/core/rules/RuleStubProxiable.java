@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
+
+import io.micrometer.common.util.StringUtils;
 
 // Generic internal rules system
 // Manages business conventions
@@ -25,10 +28,13 @@ public interface RuleStubProxiable extends Serializable {
 	static final String MUTATED_symbol = "#";
 
 	static String mutatedProxy(String proxy) {
+		Preconditions.checkArgument(StringUtils.isNotBlank(proxy));
 		return proxy + MUTATED_symbol;
 	}
 
 	static String mutatedProxy(String proxy, short accumulator) {
+		Preconditions.checkArgument(StringUtils.isNotBlank(proxy));
+		Preconditions.checkArgument(accumulator > 1);
 		StringBuilder sb = new StringBuilder(proxy);
 		for (int i = 0; i < accumulator; i++) {
 			sb.append(MUTATED_symbol);
