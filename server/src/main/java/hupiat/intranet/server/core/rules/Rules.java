@@ -13,6 +13,8 @@ import hupiat.intranet.server.core.rules.generics.SizeRuled;
 
 // Cannot use ClassToInstanceMap due to genericity (would be verbose any case, at use)
 
+// records are final but there is no mixining goal so it seems being the best choice
+
 @Service
 public record Rules(ImmutableMultiset<RuleStubBuilder<? extends RuleStubProxiable>> stubs) {
 
