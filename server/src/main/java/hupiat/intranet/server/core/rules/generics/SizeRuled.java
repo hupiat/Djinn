@@ -30,10 +30,10 @@ public record SizeRuled(short min, long max) implements RuleStubProxiable {
 		}
 		if (this.max == MAX_VALUE_COMMON) {
 			if (this.min == MIN_VALUE) {
-				return RuleStubProxiable.mutatedProxy(TEXT_SHORT);
+				return TEXT_SHORT;
 			}
 			if (this.min == MIN_VALUE_ALT) {
-				return TEXT_SHORT;
+				return RuleStubProxiable.mutatedProxy(TEXT_SHORT);
 			}
 			return logInvalidProxy(String.format("Minimum value is %s or %s when maximum is %l", MIN_VALUE,
 					MIN_VALUE_ALT, MAX_VALUE_COMMON));
