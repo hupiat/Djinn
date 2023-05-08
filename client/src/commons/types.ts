@@ -15,6 +15,7 @@ export type ResponseType = "json" | "text" | "blob";
 
 export interface HandshakeInitDTO {
   apiPrefix: string;
+  // TODO : rules
 }
 
 export type Toaster = {

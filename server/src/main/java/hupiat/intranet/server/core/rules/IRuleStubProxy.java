@@ -1,9 +1,10 @@
 package hupiat.intranet.server.core.rules;
 
 import java.io.Serializable;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.google.common.collect.ImmutableSet;
 
 // Generic internal rules system
 // Manages business conventions
@@ -13,7 +14,7 @@ public interface IRuleStubProxy extends Serializable {
 
 	String buildProxy();
 
-	Set<String> buildProxyCases();
+	ImmutableSet<String> buildProxyCases();
 
 	static final Logger LOGGER = Logger.getLogger(IRuleStubProxy.class.getSimpleName());
 

@@ -1,14 +1,14 @@
 package hupiat.intranet.server.core.rules.generics;
 
-import java.util.Set;
+import com.google.common.collect.ImmutableSet;
 
 import hupiat.intranet.server.core.rules.IRuleStubProxy;
 
 public record SizeRuled(short min, long max) implements IRuleStubProxy {
 
-	public static final short MIN_VALUE = 6;
+	public static final short MIN_VALUE = 3;
 	public static final short MIN_VALUE_ALT = 8;
-	public static final short MAX_VALUE_COMMON = 64;
+	public static final short MAX_VALUE_COMMON = 128;
 
 	public static final long MAX_VALUE = Long.MAX_VALUE;
 
@@ -42,7 +42,7 @@ public record SizeRuled(short min, long max) implements IRuleStubProxy {
 	}
 
 	@Override
-	public Set<String> buildProxyCases() {
-		return Set.of(TEXT, TEXT_SHORT, IRuleStubProxy.mutatedProxy(TEXT_SHORT));
+	public ImmutableSet<String> buildProxyCases() {
+		return ImmutableSet.of(TEXT, TEXT_SHORT, IRuleStubProxy.mutatedProxy(TEXT_SHORT));
 	}
 }
