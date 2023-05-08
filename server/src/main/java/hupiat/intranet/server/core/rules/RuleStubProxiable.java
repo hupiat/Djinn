@@ -25,7 +25,7 @@ public interface RuleStubProxiable extends Serializable {
 	static final String INVALID_symbol = "NaN";
 
 	// Not a bug but such a bad design
-	static final String MUTATED_symbol = "#";
+	static final String MUTATED_symbol = "#_";
 
 	static String mutatedProxy(String proxy) {
 		Preconditions.checkArgument(StringUtils.isNotBlank(proxy));
