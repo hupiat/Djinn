@@ -9,12 +9,12 @@ import com.google.common.collect.ImmutableMap;
 
 import hupiat.intranet.server.core.rules.generics.SizeRuled;
 
-public record RuleStubBuilder<T extends IRuleStubProxy>(Class<T> clazz) implements Serializable {
+public record RuleStubBuilder<T extends RuleStubProxiable>(Class<T> clazz) implements Serializable {
 
-	private static final ImmutableMap<String, ? extends IRuleStubProxy> constraints = ImmutableMap.of(
-			IRuleStubProxy.TEXT, new SizeRuled(SizeRuled.MIN_VALUE), IRuleStubProxy.TEXT_SHORT,
+	private static final ImmutableMap<String, ? extends RuleStubProxiable> constraints = ImmutableMap.of(
+			RuleStubProxiable.TEXT, new SizeRuled(SizeRuled.MIN_VALUE), RuleStubProxiable.TEXT_SHORT,
 			new SizeRuled(SizeRuled.MIN_VALUE, SizeRuled.MAX_VALUE_COMMON),
-			IRuleStubProxy.mutatedProxy(IRuleStubProxy.TEXT_SHORT),
+			RuleStubProxiable.mutatedProxy(RuleStubProxiable.TEXT_SHORT),
 			new SizeRuled(SizeRuled.MIN_VALUE_ALT, SizeRuled.MAX_VALUE_COMMON));
 
 	public Map<String, T> build() {

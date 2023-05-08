@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import hupiat.intranet.server.core.rules.IRuleStubProxy;
+import hupiat.intranet.server.core.rules.RuleStubProxiable;
 import hupiat.intranet.server.core.rules.Rules;
 
 @RestController
@@ -19,7 +19,7 @@ public class MetadataController implements ICommonController {
 		this.rules = rules;
 	}
 
-	private record HandshakeInitDTO(String apiPrefix, Map<String, ? extends IRuleStubProxy> rules)
+	private record HandshakeInitDTO(String apiPrefix, Map<String, ? extends RuleStubProxiable> rules)
 			implements Serializable {
 	}
 

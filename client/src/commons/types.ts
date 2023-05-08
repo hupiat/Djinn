@@ -13,9 +13,13 @@ export type WorkflowStep = "read" | "add" | "edit" | "delete";
 
 export type ResponseType = "json" | "text" | "blob";
 
+export type Rules<ObjectType> = {
+  readonly [symbol: string]: ObjectType;
+};
+
 export interface HandshakeInitDTO {
-  apiPrefix: string;
-  // TODO : rules
+  readonly apiPrefix: string;
+  rules: Rules<any>[];
 }
 
 export type Toaster = {
@@ -28,11 +32,11 @@ export type Toaster = {
 // BUSINESS
 // -----------------------------------------------------
 
-export interface IIdentified {
+export interface Identifiable {
   id: number;
 }
 
-export interface BusinessObject extends IIdentified {
+export interface BusinessObject extends Identifiable {
   name: string;
   description: string;
 }
@@ -62,7 +66,7 @@ export interface Asset extends BusinessObject {
 // OTHERS (utilities)
 // -----------------------------------------------------
 
-export type WithoutId<T extends IIdentified> = Omit<T, "id"> &
+export type WithoutId<T extends Identifiable> = Omit<T, "id"> &
   Partial<Pick<T, "id">>;
 
 export type OrArray<T> = T extends Array<T> ? T[] : T;
@@ -77,10 +81,10 @@ export type OrPromise<
       ? (...args: any) => Promise<ReturnType<T>>
       : T);
 
-export type DicoOf_Ids_And_Fields<T extends IIdentified> = {
+export type DicoOf_Ids_And_Fields<T extends Identifiable> = {
   [id: number]: (keyof T)[];
 };
 
-export type DicoOf_Fields<T extends IIdentified, ValueType = string> = {
+export type DicoOf_Fields<T extends Identifiable, ValueType = string> = {
   [field in keyof T]: ValueType;
 };

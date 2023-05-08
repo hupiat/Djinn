@@ -10,13 +10,13 @@ import com.google.common.collect.ImmutableSet;
 // Manages business conventions
 // How to get bugs ????
 // (-:
-public interface IRuleStubProxy extends Serializable {
+public interface RuleStubProxiable extends Serializable {
 
 	String buildProxy();
 
 	ImmutableSet<String> buildProxyCases();
 
-	static final Logger LOGGER = Logger.getLogger(IRuleStubProxy.class.getSimpleName());
+	static final Logger LOGGER = Logger.getLogger(RuleStubProxiable.class.getSimpleName());
 
 	// Should never happen
 	static final String INVALID_symbol = "NaN";
