@@ -34,7 +34,6 @@
 }
 
 #login__root > h1 {
-  font-family: math;
   font-size: 5rem;
   flex-direction: column-reverse;
   width: 100vw;
