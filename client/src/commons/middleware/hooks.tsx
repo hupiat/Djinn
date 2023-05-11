@@ -142,7 +142,7 @@ export function useFetchOnce<T>(
   consumer: () => Promise<Response>,
   dataType?: ResponseType,
   setter?: React.Dispatch<React.SetStateAction<T>>
-) {
+): () => Promise<Response | undefined> {
   const res = useRef<Response>();
   const isPended = useRef<boolean>(false);
   useEffect(() => {
@@ -169,7 +169,7 @@ export function useFetchOnce<T>(
     }
   }, [consumer, dataType, setter]);
 
-  return res.current;
+  return async () => res.current;
 }
 
 export const useMyNavigate = (toaster: Toaster): NavigateFunction => {
