@@ -1,13 +1,10 @@
 import { ReactNode } from "react";
-import { BusinessObject, Toaster } from "./types";
+import { Toaster } from "./types";
 import { Notification, useToaster } from "rsuite";
 import { MessageType } from "rsuite/esm/Notification/Notification";
 import { ToastContainerProps } from "rsuite/esm/toaster/ToastContainer";
 
-export function getToastApiMessage<T extends BusinessObject>(
-  message: string,
-  obj?: T
-): ReactNode {
+export function getToastApiMessage(message: string): ReactNode {
   return (
     <span>
       <b>[API]</b>

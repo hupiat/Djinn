@@ -13,13 +13,14 @@ export type WorkflowStep = "read" | "add" | "edit" | "delete";
 
 export type ResponseType = "json" | "text" | "blob";
 
-export type Rules<ObjectType> = {
-  readonly [symbol: string]: ObjectType;
+export type Size = {
+  min: number;
+  max: number;
 };
 
 export interface HandshakeInitDTO {
   readonly apiPrefix: string;
-  rules: Rules<any>[];
+  readonly rules: Rules;
 }
 
 export type Toaster = {
@@ -31,6 +32,13 @@ export type Toaster = {
 // -----------------------------------------------------
 // BUSINESS
 // -----------------------------------------------------
+
+// TODO : script to manage that
+export type Rules = {
+  readonly text: Size;
+  readonly text_short: Size;
+  readonly "text_short#_": Size;
+};
 
 export interface Identifiable {
   id: number;

@@ -104,8 +104,7 @@ const useStoreDataCreate = <T extends BusinessObject>(
       getToastApiMessage(
         `${obj.name} (id : ${
           obj.id
-        }) has been ${juxtaposition()}, (description : [${obj.description}])`,
-        obj
+        }) has been ${juxtaposition()}, (description : [${obj.description}])`
       )
     );
   };

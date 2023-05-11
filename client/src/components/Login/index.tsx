@@ -1,10 +1,9 @@
-import { useDeferredValue, useState, useTransition } from "react";
+import { useDeferredValue, useMemo, useState, useTransition } from "react";
 import { Account } from "../../commons/types";
-import { SchemaModel, StringType } from "schema-typed";
+import { Schema, SchemaModel, StringType } from "schema-typed";
 import { Button, Form, InputGroup } from "rsuite";
 import "./styles.css";
 import { Branch, EyeClose, Send, UserBadge, Visible } from "@rsuite/icons";
-import { MAX_LENGTH_COMMON, MIN_LENGTH_COMMON } from "../../commons/tools";
 import DataStore from "../../commons/middleware/DataStore";
 import { useMiddlewareContext } from "../../commons/middleware/context";
 import { PATH_LOGIN } from "../../commons/middleware/paths";
@@ -13,19 +12,6 @@ import { useMyToaster } from "../../commons/hooks";
 import { useMyNavigate } from "../../commons/middleware/hooks";
 
 type AccountTypingTokenDTO = Pick<Account, "name"> & Pick<Account, "password">;
-
-const schema = SchemaModel<AccountTypingTokenDTO>({
-  name: StringType()
-    .rangeLength(MIN_LENGTH_COMMON, MAX_LENGTH_COMMON)
-    .isRequired(),
-  password: StringType()
-    .rangeLength(8, MAX_LENGTH_COMMON)
-    .containsLetter()
-    .containsNumber()
-    .containsUppercaseLetter()
-    .containsLowercaseLetter()
-    .isRequired(),
-});
 
 const defaultState: AccountTypingTokenDTO = {
   name: "",
@@ -53,6 +39,31 @@ export default function Login() {
     // purely internally js managed despite all. (no uri)
     startTransition(() => navigate(PATH_ROOT));
   }
+
+  const schema = useMemo<
+    Schema<AccountTypingTokenDTO, string> | undefined
+  >(() => {
+    if (metadataInit) {
+      return SchemaModel<AccountTypingTokenDTO>({
+        name: StringType()
+          .rangeLength(
+            metadataInit.rules.text_short.min,
+            metadataInit.rules.text_short.max
+          )
+          .isRequired(),
+        password: StringType()
+          .rangeLength(
+            metadataInit.rules["text_short#_"].min,
+            metadataInit.rules["text_short#_"].max
+          )
+          .containsLetter()
+          .containsNumber()
+          .containsUppercaseLetter()
+          .containsLowercaseLetter()
+          .isRequired(),
+      });
+    }
+  }, [metadataInit]);
 
   const handleCardClick = (): void => {
     setPassVisible(false);
