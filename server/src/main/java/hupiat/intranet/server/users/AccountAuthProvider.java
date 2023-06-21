@@ -24,9 +24,7 @@ public class AccountAuthProvider implements AuthenticationProvider {
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String username = authentication.getPrincipal().toString();
-
-		// TODO : 403 for now
-		String password = bCryptPasswordEncoder.encode(authentication.getCredentials().toString());
+		String password = authentication.getCredentials().toString();
 
 		UserDetails user;
 		try {
@@ -36,7 +34,8 @@ public class AccountAuthProvider implements AuthenticationProvider {
 		}
 
 		if (bCryptPasswordEncoder.matches(password, user.getPassword())) {
-			return new UsernamePasswordAuthenticationToken(user.getUsername(), password);
+			return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
+					authentication.getCredentials());
 		}
 
 		throw new AuthenticationServiceException(EXCEPTION + " (bad credentials) ");

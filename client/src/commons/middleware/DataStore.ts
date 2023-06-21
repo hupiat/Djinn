@@ -165,7 +165,7 @@ export default class DataStore<T extends BusinessObject> {
   }
 
   emptySynchronize(): void {
-    if (!this.hasAPI) {
+    if (!this.hasAPI()) {
       throw Error(
         "DataStore#emptySynchronize: cannot perform unless API uri is provided"
       );

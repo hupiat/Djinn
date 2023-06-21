@@ -36,6 +36,7 @@ public class Account extends AbstractEntityObject<Short> implements UserDetails 
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO
 		return null;
 	}
 

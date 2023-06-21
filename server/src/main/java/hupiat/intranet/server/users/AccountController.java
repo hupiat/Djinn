@@ -6,8 +6,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import hupiat.intranet.server.core.annotations.NotBlankSized;
@@ -28,16 +28,16 @@ public class AccountController implements ICommonController {
 	}
 
 	private record AccountTypingTokenDTO(
-			@NotBlankSized(min = SizeRuled.MIN_VALUE, max = SizeRuled.MAX_VALUE_COMMON) String login,
+			@NotBlankSized(min = SizeRuled.MIN_VALUE, max = SizeRuled.MAX_VALUE_COMMON) String name,
 			@NotBlankSized(min = SizeRuled.MIN_VALUE_ALT, max = SizeRuled.MAX_VALUE_COMMON) String password)
 			implements Serializable {
 	}
 
 	@PostMapping(ICommonController.PATH_API_LOGIN)
-	Account login(@RequestBody @Valid AccountTypingTokenDTO token) {
+	Account login(@ModelAttribute @Valid AccountTypingTokenDTO token) {
 		Authentication auth = accountAuthProvider
-				.authenticate(new UsernamePasswordAuthenticationToken(token.login, token.password));
-		Account account = accountRepository.findByName(token.login).orElseThrow();
+				.authenticate(new UsernamePasswordAuthenticationToken(token.name, token.password));
+		Account account = accountRepository.findByName(token.name).orElseThrow();
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		account.setPassword(null);
 		return account;

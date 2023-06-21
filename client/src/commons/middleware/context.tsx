@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useContext } from "react";
 import {
   Account,
@@ -12,7 +12,7 @@ import { useFetchOnce } from "./hooks";
 interface IMiddlewareContext {
   metadataInit?: HandshakeInitDTO;
   user: Account | null;
-  setUser: Dispatch<SetStateAction<Account | null>>;
+  setUser: (user: Account | null) => void;
 }
 
 const SetupMiddlewareContext = React.createContext<
@@ -23,8 +23,10 @@ interface IProps {
   children?: ContextChildren;
 }
 
+const SESSION_STORAGE_USER = "user_storage";
+
 const MiddlewareContext = ({ children }: IProps) => {
-  const [user, setUser] = useState<Account | null>(null);
+  const [user, setUserState] = useState<Account | null>(null);
   const [handshakeInit, setHandshakeInit] = useState<HandshakeInitDTO>();
 
   useFetchOnce(
@@ -36,6 +38,22 @@ const MiddlewareContext = ({ children }: IProps) => {
     "json",
     setHandshakeInit
   );
+
+  const setUser = (user: Account | null) => {
+    localStorage.setItem(SESSION_STORAGE_USER, JSON.stringify(user));
+    setUserState(user);
+  };
+
+  useEffect(() => {
+    if (!user) {
+      // TODO : see for isAuthenticated() uri instead
+      let storage = localStorage.getItem(SESSION_STORAGE_USER);
+      if (!!storage) {
+        storage = JSON.parse(storage);
+        setUserState(storage as any as Account);
+      }
+    }
+  }, [user, setUserState]);
 
   return (
     <SetupMiddlewareContext.Provider

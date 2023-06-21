@@ -60,7 +60,7 @@ public class SecurityConfigAdapter {
 					}
 				});
 
-		return http.build();
+		return http.csrf().disable().build();
 	}
 
 	@Bean
