@@ -1,16 +1,23 @@
-import { Treemap, Trend, Visible } from "@rsuite/icons";
+import { Off, Treemap, Trend, Visible } from "@rsuite/icons";
 import { Nav, Sidenav } from "rsuite";
 import "./styles.css";
-import { PATH_ANALYTICS, PATH_ASSETS, PATH_MONITORING } from "./paths";
+import {
+  PATH_ANALYTICS,
+  PATH_ASSETS,
+  PATH_MONITORING,
+  PATH_ROOT,
+} from "./paths";
 import { useSidebarContext } from "./context";
 import { useCallback, useTransition } from "react";
 import { useNavigate } from "react-router";
 import { getCSSVar } from "../../commons/tools";
+import { useMiddlewareContext } from "../../commons/middleware/context";
 
 const ACTIVE_COLOR = getCSSVar("--purple-app");
 
 export default function Sidebar() {
   const { currentSidebarPath, setCurrentSidebarPath } = useSidebarContext();
+  const { setUser } = useMiddlewareContext();
   const [, startTransition] = useTransition();
   const navigate = useNavigate();
 
@@ -25,13 +32,23 @@ export default function Sidebar() {
         [PATH_ASSETS]: <Treemap fill={fillActive(PATH_ASSETS)} />,
         [PATH_MONITORING]: <Visible fill={fillActive(PATH_MONITORING)} />,
         [PATH_ANALYTICS]: <Trend fill={fillActive(PATH_ANALYTICS)} />,
+        [PATH_ROOT]: <Off fill={fillActive(PATH_ROOT)} />,
       };
       return (
         <Nav.Item
           icon={ICONS[path]}
           onClick={() => {
-            startTransition(() => navigate(path));
-            setCurrentSidebarPath(path);
+            startTransition(() => {
+              const logout = () => {
+                setCurrentSidebarPath(path);
+                navigate(path);
+              };
+              if (path === PATH_ROOT) {
+                setUser(null).then(logout);
+              } else {
+                logout();
+              }
+            });
           }}
         >
           <span
@@ -44,7 +61,7 @@ export default function Sidebar() {
         </Nav.Item>
       );
     },
-    [fillActive, setCurrentSidebarPath, startTransition, navigate]
+    [fillActive, setCurrentSidebarPath, startTransition, navigate, setUser]
   );
 
   return (
@@ -62,6 +79,7 @@ export default function Sidebar() {
             >
               {renderNavItem(PATH_ANALYTICS, "TODO")}
             </Nav.Menu>
+            {renderNavItem(PATH_ROOT, "Logout")}
           </Nav>
         </Sidenav.Body>
       </Sidenav>

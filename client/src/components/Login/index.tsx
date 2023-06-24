@@ -7,7 +7,7 @@ import { Branch, EyeClose, Send, UserBadge, Visible } from "@rsuite/icons";
 import DataStore from "../../commons/middleware/DataStore";
 import { useMiddlewareContext } from "../../commons/middleware/context";
 import { PATH_LOGIN } from "../../commons/middleware/paths";
-import { PATH_ROOT } from "../Sidebar/paths";
+import { PATH_DEFAULT, PATH_ROOT } from "../Sidebar/paths";
 import { useMyToaster } from "../../commons/hooks";
 import { useMyNavigate } from "../../commons/middleware/hooks";
 
@@ -76,6 +76,7 @@ export default function Login() {
     e: React.FormEvent<HTMLFormElement>
   ): Promise<void> =>
     startTransition(() => {
+      let error: number;
       DataStore.doFetch(
         metadataInit?.apiPrefix + "/" + PATH_LOGIN,
         async (url) => {
@@ -83,13 +84,21 @@ export default function Login() {
             method: "POST",
             body: new FormData(e.currentTarget),
           });
-          setUser(await res.json());
+          if (!res.ok) {
+            error = res.status;
+          } else {
+            await setUser(await res.json());
+          }
           return res;
         },
         false
       )
-        .then(() => navigate(PATH_ROOT))
-        .catch(() => toaster.toast("Bad credentials"));
+        .then(() => navigate(PATH_DEFAULT))
+        .catch(() =>
+          toaster.toast(
+            error === 500 ? "No response from server" : "Bad credentials"
+          )
+        );
     });
 
   return (

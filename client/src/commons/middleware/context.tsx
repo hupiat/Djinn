@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useTransition, useState } from "react";
 import { useContext } from "react";
 import {
   Account,
@@ -6,13 +6,14 @@ import {
   HandshakeInitDTO,
 } from "../../commons/types";
 import DataStore from "./DataStore";
-import { PATH_METADATA } from "./paths";
+import { PATH_LOGOUT, PATH_METADATA } from "./paths";
 import { useFetchOnce } from "./hooks";
+import { useMyToaster } from "../hooks";
 
 interface IMiddlewareContext {
   metadataInit?: HandshakeInitDTO;
   user: Account | null;
-  setUser: (user: Account | null) => void;
+  setUser: (user: Account | null) => Promise<void | boolean>;
 }
 
 const SetupMiddlewareContext = React.createContext<
@@ -28,7 +29,11 @@ const SESSION_STORAGE_USER = "user_storage";
 const MiddlewareContext = ({ children }: IProps) => {
   const [user, setUserState] = useState<Account | null>(null);
   const [handshakeInit, setHandshakeInit] = useState<HandshakeInitDTO>();
+  const [pendingLogout, startLogout] = useTransition();
+  const toasterErrorLogout = useMyToaster("Logout", "error");
 
+  // Most adapted to fetch only once
+  // Planned for consistant data aka to be more flexible, unlike user typically
   useFetchOnce(
     async () =>
       (await DataStore.doFetch(
@@ -39,21 +44,40 @@ const MiddlewareContext = ({ children }: IProps) => {
     setHandshakeInit
   );
 
-  const setUser = (user: Account | null) => {
-    localStorage.setItem(SESSION_STORAGE_USER, JSON.stringify(user));
-    setUserState(user);
+  // State reducer (local storage + logout)
+  const setUser = async (user: Account | null): Promise<void | boolean> => {
+    if (!user) {
+      startLogout(() => {
+        // Achi better pattern dependency there thanks to v18.xx, asmabaok hooks assumpted design
+        // (cannot navigate at all adespi, will not hide an eventually error toast, maybe better to keep this)
+        DataStore.doFetch(
+          handshakeInit?.apiPrefix + "/" + PATH_LOGOUT,
+          async (url) =>
+            await fetch(url, {
+              method: "DELETE",
+            })
+        )
+          .then(() => {
+            setUserState(user);
+            localStorage.removeItem(SESSION_STORAGE_USER);
+          })
+          .catch(() => toasterErrorLogout.toast("Internal error"));
+      });
+      return pendingLogout;
+    } else {
+      localStorage.setItem(SESSION_STORAGE_USER, JSON.stringify(user));
+      setUserState(user);
+    }
   };
 
-  useEffect(() => {
-    if (!user) {
-      // TODO : see for isAuthenticated() uri instead
-      let storage = localStorage.getItem(SESSION_STORAGE_USER);
-      if (!!storage) {
-        storage = JSON.parse(storage);
-        setUserState(storage as any as Account);
-      }
+  // Init state from local storage
+  if (!user) {
+    let storage = localStorage.getItem(SESSION_STORAGE_USER);
+    if (!!storage) {
+      storage = JSON.parse(storage);
+      setUserState(storage as any as Account);
     }
-  }, [user, setUserState]);
+  }
 
   return (
     <SetupMiddlewareContext.Provider

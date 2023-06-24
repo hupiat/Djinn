@@ -2,7 +2,6 @@ package hupiat.intranet.server.users;
 
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +23,6 @@ public class AccountAuthProvider implements AuthenticationProvider {
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String username = authentication.getPrincipal().toString();
-		String password = authentication.getCredentials().toString();
 
 		UserDetails user;
 		try {
@@ -33,9 +31,8 @@ public class AccountAuthProvider implements AuthenticationProvider {
 			throw new AuthenticationServiceException(EXCEPTION, e);
 		}
 
-		if (bCryptPasswordEncoder.matches(password, user.getPassword())) {
-			return new UsernamePasswordAuthenticationToken(authentication.getPrincipal(),
-					authentication.getCredentials());
+		if (bCryptPasswordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
+			return authentication;
 		}
 
 		throw new AuthenticationServiceException(EXCEPTION + " (bad credentials) ");
