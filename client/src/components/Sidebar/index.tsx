@@ -34,9 +34,11 @@ export default function Sidebar() {
         [PATH_ANALYTICS]: <Trend fill={fillActive(PATH_ANALYTICS)} />,
         [PATH_ROOT]: <Off fill={fillActive(PATH_ROOT)} />,
       };
+      const color = fillActive(path);
       return (
         <Nav.Item
           icon={ICONS[path]}
+          active={!!color}
           onClick={() => {
             startTransition(() => {
               const navigation = () => {
@@ -53,7 +55,7 @@ export default function Sidebar() {
         >
           <span
             style={{
-              color: fillActive(path),
+              color,
             }}
           >
             {title}
@@ -79,7 +81,10 @@ export default function Sidebar() {
             >
               {renderNavItem(PATH_ANALYTICS, "TODO")}
             </Nav.Menu>
-            {renderNavItem(PATH_ROOT, "Logout")}
+            {
+              // TODO : à mettre en bas avec un loader qui tourne ou qui fait un timer + un toast pour annuler
+              renderNavItem(PATH_ROOT, "Logout")
+            }
           </Nav>
         </Sidenav.Body>
       </Sidenav>
