@@ -39,14 +39,14 @@ export default function Sidebar() {
           icon={ICONS[path]}
           onClick={() => {
             startTransition(() => {
-              const logout = () => {
+              const navigation = () => {
                 setCurrentSidebarPath(path);
                 navigate(path);
               };
               if (path === PATH_ROOT) {
-                setUser(null).then(logout);
+                setUser(null).then(navigation);
               } else {
-                logout();
+                navigation();
               }
             });
           }}
