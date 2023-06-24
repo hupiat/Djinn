@@ -49,7 +49,9 @@ const MiddlewareContext = ({ children }: IProps) => {
     if (!user) {
       startLogout(() => {
         // Achi better pattern dependency there thanks to v18.xx, asmabaok hooks assumpted design
-        // (cannot navigate at all adespi, will not hide an eventually error toast, maybe better to keep this)
+        // N.B
+        // About context semantics :
+        // cannot navigate at all adespi, will not hide an eventually error toast, maybe better to keep this
         DataStore.doFetch(
           handshakeInit?.apiPrefix + "/" + PATH_LOGOUT,
           async (url) =>
