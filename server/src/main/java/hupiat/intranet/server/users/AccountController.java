@@ -59,6 +59,7 @@ public class AccountController implements ICommonController {
 		Authentication token = context.getAuthentication();
 		Account account = accountRepository.findByName(token.getName()).orElseThrow();
 		session.removeAttribute(SPRING_SECURITY_CONTEXT_KEY);
+		account.setPassword(null);
 		return account;
 	}
 }
