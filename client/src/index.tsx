@@ -1,19 +1,15 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import "rsuite/dist/rsuite.min.css";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import MiddlewareContext from "./commons/middleware/context";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+  document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <MiddlewareContext>
-      <App />
-    </MiddlewareContext>
+    <App />
   </React.StrictMode>
 );
 

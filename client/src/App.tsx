@@ -1,33 +1,25 @@
-import React from "react";
-import SidebarContext from "./components/Sidebar/context";
-import ViewAssets from "./components/assets/ViewAssets";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import {
-  PATH_ANALYTICS,
-  PATH_ASSETS,
-  PATH_MONITORING,
-  PATH_ROOT,
-} from "./components/Sidebar/paths";
-import { useMiddlewareContext } from "./commons/middleware/context";
-import Login from "./components/Login";
+import React from 'react';
+import logo from './logo.svg';
+import './App.css';
 
 function App() {
-  const { user } = useMiddlewareContext();
   return (
-    <Router>
-      {!user ? (
-        <Login />
-      ) : (
-        <SidebarContext>
-          <Routes>
-            <Route path={PATH_ROOT} element={<ViewAssets />} />
-            <Route path={PATH_ASSETS} element={<ViewAssets />} />
-            <Route path={PATH_MONITORING} element={<></>} />
-            <Route path={PATH_ANALYTICS} element={<></>} />
-          </Routes>
-        </SidebarContext>
-      )}
-    </Router>
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.tsx</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
   );
 }
 
