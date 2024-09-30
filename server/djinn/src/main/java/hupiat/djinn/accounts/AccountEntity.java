@@ -5,10 +5,15 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import hupiat.djinn.core.entities.AbstractCommonEntity;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 
+@Entity
 public class AccountEntity extends AbstractCommonEntity implements UserDetails {
 
 	@Column(nullable = false, unique = true)
@@ -18,6 +23,7 @@ public class AccountEntity extends AbstractCommonEntity implements UserDetails {
 	private String username;
 
 	@Column(nullable = false)
+	@JsonIgnore
 	private String password;
 
 	@Nullable
@@ -25,6 +31,12 @@ public class AccountEntity extends AbstractCommonEntity implements UserDetails {
 
 	public AccountEntity() {
 		super();
+	}
+
+	@Override
+	@JsonProperty
+	public String getPassword() {
+		return password;
 	}
 
 	public String getEmail() {
@@ -49,11 +61,6 @@ public class AccountEntity extends AbstractCommonEntity implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	@Override
-	public String getPassword() {
-		return password;
 	}
 
 	@Override
