@@ -1,6 +1,18 @@
 #sidebar__container {
-  width: 20vw;
+  width: 300px;
   height: 97.5vh;
   background-color: var(--primary);
   position: static;
+}
+
+#sidebar__top__container {
+  display: flex;
+  align-items: center;
+}
+
+#sidebar__top__container > img {
+  width: 75px;
+  height: 75px;
+  border-radius: 20%;
+  margin: 20px;
 }
