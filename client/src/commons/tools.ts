@@ -15,3 +15,10 @@ export const validatePassword = (pw: string): boolean => {
     pw.length > 8
   );
 };
+
+export const getCSSVar = (name: string): string => {
+  if (!name.startsWith("--")) {
+    name = "--" + name;
+  }
+  return getComputedStyle(document.body).getPropertyValue(name);
+};

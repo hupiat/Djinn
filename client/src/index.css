@@ -1,3 +1,13 @@
 body {
   background-image: url("assets/background.webp");
 }
+
+#container__root {
+  display: flex;
+}
+
+:root {
+  --primary: #6a1b9a;
+  --secondary: #ad1457;
+  --contrastText: #ffffff;
+}

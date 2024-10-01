@@ -2,19 +2,26 @@ import { Card, Container, Fab } from "@mui/material";
 import React, { useState } from "react";
 import "./styles.css";
 import Logo from "../../assets/logo.webp";
-import { AddLink, Face4, Unsubscribe, Visibility } from "@mui/icons-material";
+import { AddLink, Face4, NotInterested, Visibility } from "@mui/icons-material";
 import InputFormStandard from "../InputFormStandard";
 import ButtonWithAction from "../ButtonWithAction.tsx";
 import { useMiddlewareContext } from "../../commons/middleware/context";
 import { Account } from "../../commons/types";
 import { validateEmail, validatePassword } from "../../commons/tools";
+import { PATH_PROJECTS } from "../../commons/middleware/paths";
+import { useNavigate } from "react-router-dom";
 
 export default function PageLogin() {
   const [isSuscribing, setIsSuscribing] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
-  const { setUser, storeDataAccounts } = useMiddlewareContext();
+  const { user, setUser, storeDataAccounts } = useMiddlewareContext();
+  const navigate = useNavigate();
+
+  if (user) {
+    navigate(PATH_PROJECTS);
+  }
 
   const validateSchema = (): boolean => {
     if (isSuscribing) {
@@ -87,7 +94,7 @@ export default function PageLogin() {
         id="button__login__suscribe"
         onClick={() => setIsSuscribing(!isSuscribing)}
       >
-        {isSuscribing ? <Unsubscribe /> : <AddLink />}
+        {isSuscribing ? <NotInterested /> : <AddLink />}
       </Fab>
     </Container>
   );

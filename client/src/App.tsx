@@ -1,23 +1,22 @@
 import React from "react";
-import PageLogin from "./components/PageLogin";
 import { createTheme, ThemeProvider } from "@mui/material";
 import MiddlewareContext from "./commons/middleware/context";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { PATH_LOGIN } from "./commons/middleware/paths";
+import Pages from "./components/Pages";
+import { getCSSVar } from "./commons/tools";
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#6A1B9A",
+      main: getCSSVar("primary"),
       light: "#7B1FA2",
       dark: "#4A148C",
-      contrastText: "#FFFFFF",
+      contrastText: getCSSVar("contrastText"),
     },
     secondary: {
-      main: "#AD1457",
+      main: getCSSVar("secondary"),
       light: "#C2185B",
       dark: "#880E4F",
-      contrastText: "#FFFFFF",
+      contrastText: getCSSVar("contrastText"),
     },
   },
 });
@@ -26,11 +25,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <MiddlewareContext>
-        <BrowserRouter>
-          <Routes>
-            <Route path={PATH_LOGIN} Component={PageLogin} />
-          </Routes>
-        </BrowserRouter>
+        <Pages />
       </MiddlewareContext>
     </ThemeProvider>
   );

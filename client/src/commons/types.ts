@@ -23,7 +23,6 @@ export interface Account extends BusinessObject {
   username: string;
   token?: string;
   picture?: string;
-  // Will not be present from fetching, even encrypted
   password?: string;
 }
 
