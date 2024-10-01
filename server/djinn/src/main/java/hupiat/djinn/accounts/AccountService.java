@@ -20,14 +20,14 @@ public class AccountService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return accountRepository.findByUsername(username).orElseThrow();
+		return accountRepository.findByEmail(username).orElseThrow();
 	}
 
 	public AccountEntity insert(String username, String email, String password) {
 		AccountEntity entity = new AccountEntity();
 		entity.setEmail(email);
 		entity.setUsername(username);
-		entity.setPassword(password);
+		entity.setPassword(passwordEncoder.encode(password));
 		entity = accountRepository.save(entity);
 		return entity;
 	}

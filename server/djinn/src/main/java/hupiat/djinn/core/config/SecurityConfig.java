@@ -19,7 +19,8 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.disable())
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.POST,
-								ICommonController.API_PREFIX + "/" + ICommonController.API_ACCOUNTS + "/login")
+								ICommonController.API_PREFIX + "/" + ICommonController.API_ACCOUNTS + "/login",
+								ICommonController.API_PREFIX + "/" + ICommonController.API_ACCOUNTS)
 						.permitAll().anyRequest().authenticated());
 
 		return http.build();

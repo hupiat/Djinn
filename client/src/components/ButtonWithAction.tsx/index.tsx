@@ -21,12 +21,12 @@ export default function ButtonWithAction(props: IProps) {
 
   const getIcon = () => {
     if (isLoading) {
-      return <CircularProgress className="button__action__icon" />;
+      return <CircularProgress size={"1rem"} />;
     }
     if (props.icon) {
-      return <Box className="button__action__icon">{props.icon}</Box>;
+      return <Box>{props.icon}</Box>;
     } else {
-      return <Send className="button__action__icon" />;
+      return <Send />;
     }
   };
 

@@ -24,7 +24,7 @@ public class AccountAuthProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String username = authentication.getPrincipal() == null ? null : authentication.getPrincipal().toString();
+		String username = authentication.getName();
 
 		UserDetails user;
 		try {

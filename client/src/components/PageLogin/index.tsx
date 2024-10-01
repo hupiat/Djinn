@@ -1,8 +1,8 @@
-import { Card, Container } from "@mui/material";
+import { Card, Container, Fab } from "@mui/material";
 import React, { useState } from "react";
 import "./styles.css";
 import Logo from "../../assets/logo.webp";
-import { Face4, Visibility } from "@mui/icons-material";
+import { AddLink, Face4, Unsubscribe, Visibility } from "@mui/icons-material";
 import InputFormStandard from "../InputFormStandard";
 import ButtonWithAction from "../ButtonWithAction.tsx";
 import { useMiddlewareContext } from "../../commons/middleware/context";
@@ -14,7 +14,7 @@ export default function PageLogin() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
-  const { setUser } = useMiddlewareContext();
+  const { setUser, storeDataAccounts } = useMiddlewareContext();
 
   const validateSchema = (): boolean => {
     if (isSuscribing) {
@@ -26,6 +26,22 @@ export default function PageLogin() {
       );
     } else {
       return validateEmail(email) && validatePassword(password);
+    }
+  };
+
+  const handleClick = async () => {
+    if (isSuscribing) {
+      await storeDataAccounts.add({
+        email: email,
+        username: email,
+        password: password,
+      });
+      setPasswordConfirm("");
+    } else {
+      await setUser({
+        email,
+        password,
+      } as Account);
     }
   };
 
@@ -49,18 +65,30 @@ export default function PageLogin() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        {isSuscribing && (
+          <InputFormStandard
+            icon={<Visibility />}
+            label="Confirm password"
+            type="password"
+            containerClassName="card__login__input"
+            value={passwordConfirm}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
+          />
+        )}
         <ButtonWithAction
-          text="Login"
+          text={isSuscribing ? "Suscribe" : "Login"}
           disabled={!validateSchema()}
           iconPosition="end"
-          onClick={async () => {
-            await setUser({
-              email,
-              password,
-            } as Account);
-          }}
+          onClick={handleClick}
         />
       </Card>
+      <Fab
+        color="secondary"
+        id="button__login__suscribe"
+        onClick={() => setIsSuscribing(!isSuscribing)}
+      >
+        {isSuscribing ? <Unsubscribe /> : <AddLink />}
+      </Fab>
     </Container>
   );
 }

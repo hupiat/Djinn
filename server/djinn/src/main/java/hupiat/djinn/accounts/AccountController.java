@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -45,12 +46,12 @@ public class AccountController implements ICommonController<AccountEntity> {
 	}
 
 	@Override
-	public AccountEntity add(AccountEntity entity) {
+	public AccountEntity add(@RequestBody AccountEntity entity) {
 		return accountService.insert(entity.getUsername(), entity.getEmail(), entity.getPassword());
 	}
 
 	@Override
-	public AccountEntity update(AccountEntity entity) {
+	public AccountEntity update(@RequestBody AccountEntity entity) {
 		return accountService.update(entity, true);
 	}
 
@@ -60,7 +61,7 @@ public class AccountController implements ICommonController<AccountEntity> {
 	}
 
 	@PostMapping("login")
-	public AccountEntity login(AccountEntity account, HttpServletRequest req) {
+	public AccountEntity login(@RequestBody AccountEntity account, HttpServletRequest req) {
 		Authentication auth = accountAuthProvider.authenticate(
 				new UsernamePasswordAuthenticationToken(account.getEmail(), account.getPassword(), new ArrayList<>()));
 		SecurityContext sc = SecurityContextHolder.getContext();

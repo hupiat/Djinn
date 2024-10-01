@@ -58,7 +58,7 @@ const MiddlewareContext = ({ children }: IProps) => {
         })
       )
         .then(async (res) => {
-          if (res!.status == 404) {
+          if (res!.status === 404) {
             throw Error("Bad credentials");
           } else {
             // Toast.show({
