@@ -1,6 +1,7 @@
 import React from "react";
 import PageLogin from "./components/PageLogin";
 import { createTheme, ThemeProvider } from "@mui/material";
+import MiddlewareContext from "./commons/middleware/context";
 
 const theme = createTheme({
   palette: {
@@ -22,7 +23,9 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <PageLogin />;
+      <MiddlewareContext>
+        <PageLogin />
+      </MiddlewareContext>
     </ThemeProvider>
   );
 }

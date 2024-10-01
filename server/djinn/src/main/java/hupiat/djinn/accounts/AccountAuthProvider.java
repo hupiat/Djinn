@@ -24,7 +24,7 @@ public class AccountAuthProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		String username = authentication.getPrincipal().toString();
+		String username = authentication.getPrincipal() == null ? null : authentication.getPrincipal().toString();
 
 		UserDetails user;
 		try {
@@ -33,7 +33,6 @@ public class AccountAuthProvider implements AuthenticationProvider {
 			throw new AuthenticationServiceException(EXCEPTION, e);
 		}
 
-		AccountEntity accountEntity = (AccountEntity) user;
 		if (bCryptPasswordEncoder.matches(authentication.getCredentials().toString(), user.getPassword())) {
 			return authentication;
 		}
