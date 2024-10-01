@@ -2,6 +2,8 @@ import React from "react";
 import PageLogin from "./components/PageLogin";
 import { createTheme, ThemeProvider } from "@mui/material";
 import MiddlewareContext from "./commons/middleware/context";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { PATH_LOGIN } from "./commons/middleware/paths";
 
 const theme = createTheme({
   palette: {
@@ -24,7 +26,11 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <MiddlewareContext>
-        <PageLogin />
+        <BrowserRouter>
+          <Routes>
+            <Route path={PATH_LOGIN} Component={PageLogin} />
+          </Routes>
+        </BrowserRouter>
       </MiddlewareContext>
     </ThemeProvider>
   );
