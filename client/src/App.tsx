@@ -1,22 +1,29 @@
 import React from "react";
+import PageLogin from "./components/PageLogin";
+import { createTheme, ThemeProvider } from "@mui/material";
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#6A1B9A",
+      light: "#7B1FA2",
+      dark: "#4A148C",
+      contrastText: "#FFFFFF",
+    },
+    secondary: {
+      main: "#AD1457",
+      light: "#C2185B",
+      dark: "#880E4F",
+      contrastText: "#FFFFFF",
+    },
+  },
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <PageLogin />;
+    </ThemeProvider>
   );
 }
 
