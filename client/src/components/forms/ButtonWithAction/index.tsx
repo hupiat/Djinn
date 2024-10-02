@@ -4,18 +4,26 @@ import "./styles.css";
 import React, { useState } from "react";
 
 type IProps = ButtonProps & {
-  text: string;
+  text: JSX.Element | string;
   onClick: () => void | Promise<void>;
   icon?: JSX.Element;
   iconPosition?: "start" | "end";
 };
 
-export default function ButtonWithAction(props: IProps) {
+export default function ButtonWithAction({
+  text,
+  onClick,
+  icon,
+  iconPosition = "start",
+  ...props
+}: IProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleClick = async () => {
     setIsLoading(true);
-    await props.onClick();
+    if (onClick) {
+      await onClick();
+    }
     setIsLoading(false);
   };
 
@@ -23,8 +31,8 @@ export default function ButtonWithAction(props: IProps) {
     if (isLoading) {
       return <CircularProgress size={"1rem"} />;
     }
-    if (props.icon) {
-      return <Box>{props.icon}</Box>;
+    if (icon) {
+      return <Box>{icon}</Box>;
     } else {
       return <Send />;
     }
@@ -36,12 +44,10 @@ export default function ButtonWithAction(props: IProps) {
       onClick={handleClick}
       disabled={isLoading || props.disabled}
       className="button__action"
-      endIcon={props.iconPosition === "end" && getIcon()}
-      startIcon={
-        (!props.iconPosition || props.iconPosition === "start") && getIcon()
-      }
+      endIcon={iconPosition === "end" && getIcon()}
+      startIcon={iconPosition === "start" && getIcon()}
     >
-      {props.text}
+      {text}
     </Button>
   );
 }

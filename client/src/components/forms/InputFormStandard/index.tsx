@@ -6,11 +6,15 @@ type IProps = TextFieldProps & {
   containerClassName?: string;
 };
 
-export default function InputFormStandard(props: IProps) {
+export default function InputFormStandard({
+  icon,
+  containerClassName,
+  ...props
+}: IProps) {
   return (
-    <FormControl className={props.containerClassName}>
+    <FormControl className={containerClassName}>
       <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-        <Box sx={{ color: "action.active", mr: 1, my: 0.5 }}>{props.icon}</Box>
+        <Box sx={{ color: "action.active", mr: 1, my: 0.5 }}>{icon}</Box>
         <TextField {...props} variant="standard" />
       </Box>
     </FormControl>

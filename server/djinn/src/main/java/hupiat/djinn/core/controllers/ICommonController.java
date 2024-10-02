@@ -13,6 +13,7 @@ public interface ICommonController<E extends AbstractCommonEntity> {
 
 	static final String API_PREFIX = "api";
 	static final String API_ACCOUNTS = "accounts";
+	static final String API_PROJECTS = "projects";
 
 	@GetMapping
 	List<E> getAll();

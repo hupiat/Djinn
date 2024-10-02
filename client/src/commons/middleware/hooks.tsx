@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import DataStore from "./DataStore";
-import { Account, BusinessObject, WorkflowStep } from "../types";
-import { API_ACCOUNTS, API_PREFIX } from "./paths";
+import { Account, BusinessObject, Project, WorkflowStep } from "../types";
+import { API_ACCOUNTS, API_PREFIX, API_PROJECTS } from "./paths";
 
 export type StoreSnapshot<T extends BusinessObject> = [
   Array<T> | null,
@@ -99,3 +99,6 @@ const useStoreDataCreate = <T extends BusinessObject>(
 
 export const useStoreDataAccounts = (): StoreSnapshot<Account> =>
   useStoreDataCreate<Account>(API_ACCOUNTS, false);
+
+export const useStoreDataProjects = (): StoreSnapshot<Project> =>
+  useStoreDataCreate<Project>(API_PROJECTS);
