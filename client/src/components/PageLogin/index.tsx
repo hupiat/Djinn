@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import "./styles.css";
 import Logo from "../../assets/logo.webp";
 import { AddLink, Face4, NotInterested, Visibility } from "@mui/icons-material";
-import InputFormStandard from "../InputFormStandard";
-import ButtonWithAction from "../ButtonWithAction.tsx";
+import InputFormStandard from "../forms/InputFormStandard";
+import ButtonWithAction from "../forms/ButtonWithAction";
 import { useMiddlewareContext } from "../../commons/middleware/context";
 import { Account } from "../../commons/types";
 import { validateEmail, validatePassword } from "../../commons/tools";
@@ -23,7 +23,7 @@ export default function PageLogin() {
     if (user) {
       navigate(PATH_PROJECTS);
     }
-  }, [user]);
+  }, [user, navigate]);
 
   const validateSchema = (): boolean => {
     if (isSuscribing) {
