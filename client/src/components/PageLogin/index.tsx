@@ -1,5 +1,5 @@
 import { Card, Container, Fab } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.css";
 import Logo from "../../assets/logo.webp";
 import { AddLink, Face4, NotInterested, Visibility } from "@mui/icons-material";
@@ -19,9 +19,11 @@ export default function PageLogin() {
   const { user, setUser, storeDataAccounts } = useMiddlewareContext();
   const navigate = useNavigate();
 
-  if (user) {
-    navigate(PATH_PROJECTS);
-  }
+  useEffect(() => {
+    if (user) {
+      navigate(PATH_PROJECTS);
+    }
+  }, [user]);
 
   const validateSchema = (): boolean => {
     if (isSuscribing) {

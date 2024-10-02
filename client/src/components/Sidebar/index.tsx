@@ -5,33 +5,34 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import React, { useState } from "react";
+import React from "react";
 import "./styles.css";
 import { PATH_LOGIN, PATH_PROJECTS } from "../../commons/middleware/paths";
 import { Logout, Map } from "@mui/icons-material";
 import Logo from "../../assets/logo.webp";
 import { useMiddlewareContext } from "../../commons/middleware/context";
+import { useNavigate } from "react-router-dom";
 
-export default function Sidebar() {
-  const [selected, setSelected] = useState<number>(0);
+interface IProps {
+  currentPath: string;
+}
+
+export default function Sidebar({ currentPath }: IProps) {
   const { setUser } = useMiddlewareContext();
+  const navigate = useNavigate();
 
   const renderItem = (
     title: string,
     path: string,
     icon: JSX.Element,
-    index: number,
-    onClick?: () => void
+    onClick?: () => void | Promise<void>
   ) => {
     return (
       <ListItemButton
-        selected={index === selected}
-        onClick={() => {
-          setSelected(index);
-          onClick && onClick();
-          // not using BrowserRouter here to build the
-          // Sidebar above (better components manage flow)
-          window.location.href = path;
+        selected={path === currentPath}
+        onClick={async () => {
+          onClick && (await onClick());
+          navigate(path);
         }}
       >
         <ListItemIcon>{icon}</ListItemIcon>
@@ -45,9 +46,14 @@ export default function Sidebar() {
       <Box id="sidebar__top__container">
         <img src={Logo} alt="Logo Djinn" /> <h1>Djinn</h1>
       </Box>
-      <List>{renderItem("Projects", PATH_PROJECTS, <Map />, 0)}</List>
+      <List>{renderItem("Projects", PATH_PROJECTS, <Map />)}</List>
       <List>
-        {renderItem("Logout", PATH_LOGIN, <Logout />, 1, () => setUser(null))}
+        {renderItem(
+          "Logout",
+          PATH_LOGIN,
+          <Logout />,
+          async () => await setUser(null)
+        )}
       </List>
     </Box>
   );

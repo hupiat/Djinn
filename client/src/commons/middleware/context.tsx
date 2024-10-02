@@ -30,52 +30,33 @@ const MiddlewareContext = ({ children }: IProps) => {
   // State reducer (login + logout)
   const setUser = async (user: Account | null): Promise<void> => {
     if (!user) {
-      DataStore.doFetch(`${API_PREFIX}/${API_ACCOUNTS}/logout`, (url) =>
+      await DataStore.doFetch(`${API_PREFIX}/${API_ACCOUNTS}/logout`, (url) =>
         fetch(url, {
           method: "DELETE",
         })
-      ).then(async (res) => {
-        const json = (await res?.json()) as Account;
-        setUserState(json);
-        // Toast.show({
-        //   type: "info",
-        //   text1: "Logout",
-        //   text2: "You have been logged out",
-        // });
-      });
-      //.catch(displayErrorToast);
+      );
+      setUserState(null);
     } else {
-      DataStore.doFetch(`${API_PREFIX}/${API_ACCOUNTS}/login`, (url) =>
-        fetch(url, {
-          method: "POST",
-          body: JSON.stringify({
-            email: user.email,
-            password: user.password,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-      )
-        .then(async (res) => {
-          if (res!.status === 404) {
-            throw Error("Bad credentials");
-          } else {
-            // Toast.show({
-            //   type: "info",
-            //   text1: "Login",
-            //   text2: "You have been logged",
-            // });
-            return await res!.json();
-          }
-        })
-        .then((json) => setUserState(json));
-      // .catch(() =>
-      // displayErrorToast({
-      //   name: "Error",
-      //   message: "Bad credentials",
-      // })
-      // );
+      const res = await DataStore.doFetch(
+        `${API_PREFIX}/${API_ACCOUNTS}/login`,
+        (url) =>
+          fetch(url, {
+            method: "POST",
+            body: JSON.stringify({
+              email: user.email,
+              password: user.password,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+      );
+      if (res!.status === 404) {
+        throw Error("Bad credentials");
+      } else {
+        const json = await res!.json();
+        setUserState(json);
+      }
     }
   };
 
