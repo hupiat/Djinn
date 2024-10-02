@@ -11,3 +11,7 @@ body {
   --secondary: #ad1457;
   --contrastText: #ffffff;
 }
+
+.Mui-selected {
+  background-color: #9e9e9e !important;
+}
