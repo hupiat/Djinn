@@ -9,13 +9,21 @@ import { useMiddlewareContext } from "../../commons/middleware/context";
 import { Account } from "../../commons/types";
 import { validateEmail, validatePassword } from "../../commons/tools";
 import { useNavigate } from "react-router-dom";
+import { PATH_CV_LIST } from "../../commons/middleware/paths";
 
 export default function PageLogin() {
   const [isSuscribing, setIsSuscribing] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
-  const { setUser, storeDataAccounts } = useMiddlewareContext();
+  const { user, setUser, storeDataAccounts } = useMiddlewareContext();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate(PATH_CV_LIST);
+    }
+  }, [user, navigate]);
 
   const validateSchema = (): boolean => {
     if (isSuscribing) {
