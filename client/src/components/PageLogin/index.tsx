@@ -8,7 +8,6 @@ import ButtonWithAction from "../forms/ButtonWithAction";
 import { useMiddlewareContext } from "../../commons/middleware/context";
 import { Account } from "../../commons/types";
 import { validateEmail, validatePassword } from "../../commons/tools";
-import { PATH_PROJECTS } from "../../commons/middleware/paths";
 import { useNavigate } from "react-router-dom";
 
 export default function PageLogin() {
@@ -16,14 +15,7 @@ export default function PageLogin() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [passwordConfirm, setPasswordConfirm] = useState<string>("");
-  const { user, setUser, storeDataAccounts } = useMiddlewareContext();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) {
-      navigate(PATH_PROJECTS);
-    }
-  }, [user, navigate]);
+  const { setUser, storeDataAccounts } = useMiddlewareContext();
 
   const validateSchema = (): boolean => {
     if (isSuscribing) {
