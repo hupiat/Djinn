@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import DataStore from "./DataStore";
-import { Account, BusinessObject, Project, WorkflowStep } from "../types";
+import { Account, BusinessObject, WorkflowStep } from "../types";
 import { API_ACCOUNTS, API_PREFIX } from "./paths";
 
 export type StoreSnapshot<T extends BusinessObject> = [

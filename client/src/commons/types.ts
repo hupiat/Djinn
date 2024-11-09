@@ -26,11 +26,6 @@ export interface Account extends BusinessObject {
   password?: string;
 }
 
-export interface Project extends BusinessObject {
-  name: string;
-  file: string;
-}
-
 // -----------------------------------------------------
 // OTHERS (utilities)
 // -----------------------------------------------------
