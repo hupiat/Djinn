@@ -1,11 +1,25 @@
-#navbar {
+#navbar,
+#navbar div {
   display: flex;
   align-items: center;
+}
+
+#navbar {
   background-color: var(--primary);
+  color: var(--contrastText);
+  justify-content: space-between;
+  padding: 0px 20px;
+}
+
+#navbar button {
   color: var(--contrastText);
 }
 
-#navbar > img {
+#navbar svg {
+  fill: var(--contrastText);
+}
+
+#navbar img {
   width: 100px;
   height: 100px;
   border-radius: 50%;

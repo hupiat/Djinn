@@ -1,5 +1,6 @@
 body {
   background-image: url("assets/background.webp");
+  font-family: Roboto;
 }
 
 #container__root {
