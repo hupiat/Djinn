@@ -13,7 +13,7 @@ export type WorkflowStep = "read" | "add" | "edit" | "delete";
 // BUSINESS
 // --------------------------------------
 
-type CVPart =
+export type CVPart =
   | "first_name"
   | "last_name"
   | "location"
