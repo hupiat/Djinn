@@ -40,7 +40,7 @@ export default function Navbar() {
         <img src={Logo} alt="Logo" />
         <h1>Djinn</h1>
       </Box>
-      <Tabs value={tab} onChange={handleChange}>
+      <Tabs id="navbar__tabs" value={tab} onChange={handleChange}>
         <Tab
           label="My curriculums"
           icon={<HistoryEdu />}
