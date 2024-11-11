@@ -22,3 +22,5 @@ export const getCSSVar = (name: string): string => {
   }
   return getComputedStyle(document.body).getPropertyValue(name);
 };
+
+export const isMobile = (): boolean => window.innerWidth < 768;

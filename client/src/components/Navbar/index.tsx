@@ -11,6 +11,7 @@ import {
 } from "../../commons/middleware/paths";
 import IconProfile from "../forms/IconProfile";
 import { useMiddlewareContext } from "../../commons/middleware/context";
+import { isMobile } from "../../commons/tools";
 
 export default function Navbar() {
   const location = useLocation();
@@ -72,6 +73,16 @@ export default function Navbar() {
           anchorEl={anchorMenuProfile}
           onClose={handleMenuProfileClose}
         >
+          {isMobile() && (
+            <MenuItem
+              onClick={() => {
+                handleMenuProfileClose();
+                navigate(PATH_CV_LIST);
+              }}
+            >
+              <HistoryEdu /> Curriculums
+            </MenuItem>
+          )}
           <MenuItem
             onClick={() => {
               handleMenuProfileClose();

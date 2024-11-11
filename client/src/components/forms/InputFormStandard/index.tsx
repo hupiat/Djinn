@@ -1,7 +1,7 @@
 import { Box, FormControl, TextField, TextFieldProps } from "@mui/material";
 import React from "react";
 
-type IProps = TextFieldProps & {
+export type InputFormStandardProps = TextFieldProps & {
   icon: JSX.Element;
   containerClassName?: string;
 };
@@ -10,7 +10,7 @@ export default function InputFormStandard({
   icon,
   containerClassName,
   ...props
-}: IProps) {
+}: InputFormStandardProps) {
   return (
     <FormControl className={containerClassName}>
       <Box sx={{ display: "flex", alignItems: "flex-end" }}>

@@ -1,0 +1,8 @@
+#settings__container {
+  display: flex;
+  justify-content: center;
+}
+
+.settings__linkedin__input {
+  margin: 50px;
+}
