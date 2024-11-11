@@ -26,6 +26,14 @@
   margin: 10px 20px;
 }
 
+#navbar__profile {
+  margin: 10px 50px;
+}
+
+#navbar__profile__menu svg {
+  margin-right: 10px;
+}
+
 @media (max-width: 768px) {
   #navbar__tabs {
     display: none !important;

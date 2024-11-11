@@ -1,10 +1,16 @@
-import { Box, Card, Tab, Tabs } from "@mui/material";
+import { Box, Button, Card, Menu, MenuItem, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 import "./styles.css";
 import Logo from "../../assets/logo.webp";
-import { HistoryEdu, Settings } from "@mui/icons-material";
+import { ExitToApp, HistoryEdu, Settings } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
-import { PATH_CV_LIST, PATH_SETTINGS } from "../../commons/middleware/paths";
+import {
+  PATH_CV_LIST,
+  PATH_LOGIN,
+  PATH_SETTINGS,
+} from "../../commons/middleware/paths";
+import IconProfile from "../forms/IconProfile";
+import { useMiddlewareContext } from "../../commons/middleware/context";
 
 export default function Navbar() {
   const location = useLocation();
@@ -20,7 +26,10 @@ export default function Navbar() {
   };
 
   const [tab, setTab] = useState<number>(getTabIndexInitial());
+  const [anchorMenuProfile, setAnchorMenuProfile] =
+    React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
+  const { setUser } = useMiddlewareContext();
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -34,20 +43,54 @@ export default function Navbar() {
     }
   };
 
+  const handleMenuProfileClose = () => setAnchorMenuProfile(null);
+
   return (
     <Card id="navbar">
       <Box>
         <img src={Logo} alt="Logo" />
         <h1>Djinn</h1>
       </Box>
-      <Tabs id="navbar__tabs" value={tab} onChange={handleChange}>
-        <Tab
-          label="My curriculums"
-          icon={<HistoryEdu />}
-          iconPosition="start"
-        />
-        <Tab label="Settings" icon={<Settings />} iconPosition="start" />
-      </Tabs>
+      <Box>
+        <Tabs id="navbar__tabs" value={tab} onChange={handleChange}>
+          <Tab
+            label="My curriculums"
+            icon={<HistoryEdu />}
+            iconPosition="start"
+          />
+          <Tab label="Settings" icon={<Settings />} iconPosition="start" />
+        </Tabs>
+        <Button
+          id="navbar__profile"
+          onClick={(e) => setAnchorMenuProfile(e.currentTarget)}
+        >
+          <IconProfile />
+        </Button>
+        <Menu
+          id="navbar__profile__menu"
+          open={anchorMenuProfile !== null}
+          anchorEl={anchorMenuProfile}
+          onClose={handleMenuProfileClose}
+        >
+          <MenuItem
+            onClick={() => {
+              handleMenuProfileClose();
+              navigate(PATH_SETTINGS);
+            }}
+          >
+            <Settings /> Settings
+          </MenuItem>
+          <MenuItem
+            onClick={async () => {
+              handleMenuProfileClose();
+              await setUser(null);
+              navigate(PATH_LOGIN);
+            }}
+          >
+            <ExitToApp /> Logout
+          </MenuItem>
+        </Menu>
+      </Box>
     </Card>
   );
 }
