@@ -52,7 +52,7 @@ public class AccountController implements ICommonController<AccountEntity> {
 
 	@Override
 	public AccountEntity update(@RequestBody AccountEntity entity) {
-		return accountService.update(entity, true);
+		return accountService.update(entity, false);
 	}
 
 	@Override

@@ -17,3 +17,7 @@ body {
 .Mui-selected {
   background-color: #9e9e9e !important;
 }
+
+.Mui-disabled {
+  color: #9e9e9e !important;
+}

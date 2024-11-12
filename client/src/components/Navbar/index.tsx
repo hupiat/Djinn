@@ -30,7 +30,7 @@ export default function Navbar() {
   const [anchorMenuProfile, setAnchorMenuProfile] =
     React.useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const { setUser } = useMiddlewareContext();
+  const { user, setUser } = useMiddlewareContext();
 
   const handleChange = (_: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -58,6 +58,7 @@ export default function Navbar() {
             label="My curriculums"
             icon={<HistoryEdu />}
             iconPosition="start"
+            disabled={!user?.linkedin}
           />
           <Tab label="Settings" icon={<Settings />} iconPosition="start" />
         </Tabs>
@@ -75,6 +76,7 @@ export default function Navbar() {
         >
           {isMobile() && (
             <MenuItem
+              disabled={!user?.linkedin}
               onClick={() => {
                 handleMenuProfileClose();
                 navigate(PATH_CV_LIST);
