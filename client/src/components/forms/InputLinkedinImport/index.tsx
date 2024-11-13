@@ -5,10 +5,10 @@ import InputFormStandard, {
 import { LinkedIn } from "@mui/icons-material";
 import { useMiddlewareContext } from "../../../commons/middleware/context";
 import { UNIPILE_API_KEY } from "../../../_local_constants";
-import { CVInformation } from "../../../commons/types";
+import { CVInformation, CVPart, CVPartFields } from "../../../commons/types";
 
 type IProps = Omit<InputFormStandardProps, "icon"> & {
-  onFetch: (informations: CVInformation) => void;
+  onFetch: (informations: CVInformation[]) => void;
 };
 
 export default function InputLinkedinImport({ onFetch, ...props }: IProps) {
@@ -35,7 +35,18 @@ export default function InputLinkedinImport({ onFetch, ...props }: IProps) {
         .then((res) => res.json())
         .then((res) => {
           setError(false);
-          onFetch(res);
+          onFetch(
+            Object.keys(res)
+              .filter((key) => CVPartFields.includes(key as CVPart))
+              .map(
+                (key) =>
+                  ({
+                    field: key,
+                    // FIXME : [object, object stored in backend]
+                    value: String(res[key]),
+                  } as CVInformation)
+              )
+          );
           const newUser = {
             ...user!,
             linkedin: deferredValue,

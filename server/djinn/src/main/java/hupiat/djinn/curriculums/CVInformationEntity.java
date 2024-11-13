@@ -15,7 +15,7 @@ public class CVInformationEntity extends AbstractCommonEntity {
 	@Enumerated(EnumType.STRING)
 	private CVPart field;
 
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "TEXT")
 	private String value;
 
 	public CVPart getField() {

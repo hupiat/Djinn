@@ -9,7 +9,7 @@ import { useMiddlewareContext } from "../../commons/middleware/context";
 import { Account } from "../../commons/types";
 import { validateEmail, validatePassword } from "../../commons/tools";
 import { useNavigate } from "react-router-dom";
-import { PATH_CV_LIST } from "../../commons/middleware/paths";
+import { PATH_CV_LIST, PATH_SETTINGS } from "../../commons/middleware/paths";
 
 export default function PageLogin() {
   const [isSuscribing, setIsSuscribing] = useState<boolean>(false);
@@ -21,7 +21,11 @@ export default function PageLogin() {
 
   useEffect(() => {
     if (user) {
-      navigate(PATH_CV_LIST);
+      if (user.linkedin) {
+        navigate(PATH_CV_LIST);
+      } else {
+        navigate(PATH_SETTINGS);
+      }
     }
   }, [user, navigate]);
 
