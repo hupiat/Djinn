@@ -34,7 +34,7 @@ public class AccountEntity extends AbstractCommonEntity implements UserDetails {
 	@Nullable
 	private String linkedin;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CVInformationEntity> informations;
 
 	public AccountEntity() {

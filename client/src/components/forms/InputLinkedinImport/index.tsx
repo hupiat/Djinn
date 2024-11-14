@@ -38,14 +38,18 @@ export default function InputLinkedinImport({ onFetch, ...props }: IProps) {
           onFetch(
             Object.keys(res)
               .filter((key) => CVPartFields.includes(key as CVPart))
-              .map(
-                (key) =>
-                  ({
-                    field: key,
-                    // FIXME : [object, object stored in backend]
-                    value: String(res[key]),
-                  } as CVInformation)
-              )
+              .map((key) => {
+                let parsed = res[key];
+                if (Array.isArray(res[key])) {
+                  parsed = JSON.stringify(res[key]);
+                } else {
+                  parsed = String(parsed);
+                }
+                return {
+                  field: key,
+                  value: parsed,
+                } as CVInformation;
+              })
           );
           const newUser = {
             ...user!,
