@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../Navbar";
 import { Card } from "@mui/material";
 import InputLinkedinImport from "../forms/InputLinkedinImport";
@@ -51,6 +51,7 @@ const CVPartFieldsIcons = {
 
 export default function PageSettings() {
   const { user, storeDataAccounts } = useMiddlewareContext();
+  const [data, setData] = useState<CVInformation[]>(user?.informations || []);
   useRedirectToLogin();
 
   const handleImport = (informations: CVInformation[]) => {
@@ -71,7 +72,7 @@ export default function PageSettings() {
       <Card id="settings__container">
         <InputLinkedinImport
           onFetch={handleImport}
-          containerClassName="settings__linkedin__input"
+          containerClassName="settings__input"
           placeholder="Import your profile..."
           helperText="Enter your profile URL"
         />
@@ -79,6 +80,15 @@ export default function PageSettings() {
           <InputFormStandard
             icon={CVPartFieldsIcons[field]}
             helperText={CVPartFieldToLabel(field)}
+            containerClassName="settings__input"
+            value={data.find((val) => val.field === field)?.value}
+            onChange={(e) =>
+              setData((vals) => {
+                const val = vals.find((val) => val.field === field)!;
+                val.value = e.target.value;
+                return [...vals];
+              })
+            }
           />
         ))}
       </Card>

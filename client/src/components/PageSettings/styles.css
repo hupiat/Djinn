@@ -6,6 +6,11 @@
   padding: 50px;
 }
 
-.settings__linkedin__input {
-  margin: 50px !important;
+.settings__input {
+  margin: 20px !important;
+  width: 100%;
+}
+
+.settings__input.MuiTextField-root {
+  width: 100%;
 }
