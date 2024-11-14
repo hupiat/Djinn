@@ -6,19 +6,63 @@ import "./styles.css";
 import { useRedirectToLogin } from "../../commons/hooks";
 import { CVInformation, CVPartFields } from "../../commons/types";
 import { useMiddlewareContext } from "../../commons/middleware/context";
+import InputFormStandard from "../forms/InputFormStandard";
+import {
+  Person,
+  LocationOn,
+  Portrait,
+  Work,
+  School,
+  Language,
+  AccountTree,
+  EmojiObjects,
+  VolunteerActivism,
+  Article,
+  Link,
+  VerifiedUser,
+  People,
+  Tag,
+  AccountCircle,
+  Public,
+  Lightbulb,
+} from "@mui/icons-material";
+import { CVPartFieldToLabel } from "../../commons/tools";
+
+const CVPartFieldsIcons = {
+  first_name: <Person />,
+  last_name: <Person />,
+  location: <LocationOn />,
+  profile_picture_url: <Portrait />,
+  headline: <Lightbulb />,
+  websites: <Link />,
+  summary: <Article />,
+  work_experience: <Work />,
+  volunteering_experience: <VolunteerActivism />,
+  skills: <EmojiObjects />,
+  education: <School />,
+  certifications: <VerifiedUser />,
+  languages: <Language />,
+  followers_count: <Public />,
+  connections_count: <People />,
+  projects: <AccountTree />,
+  hashtags: <Tag />,
+  background_profile_url: <AccountCircle />,
+};
 
 export default function PageSettings() {
   const { user, storeDataAccounts } = useMiddlewareContext();
   useRedirectToLogin();
 
   const handleImport = (informations: CVInformation[]) => {
-    storeDataAccounts
-      .update({
-        ...user!,
-        informations,
-      })
-      .then(console.log)
-      .catch(console.error);
+    if (informations.length) {
+      storeDataAccounts
+        .update({
+          ...user!,
+          informations,
+        })
+        .then(console.log)
+        .catch(console.error);
+    }
   };
 
   return (
@@ -31,6 +75,12 @@ export default function PageSettings() {
           placeholder="Import your profile..."
           helperText="Enter your profile URL"
         />
+        {CVPartFields.map((field) => (
+          <InputFormStandard
+            icon={CVPartFieldsIcons[field]}
+            helperText={CVPartFieldToLabel(field)}
+          />
+        ))}
       </Card>
     </>
   );

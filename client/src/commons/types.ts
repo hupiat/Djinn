@@ -44,6 +44,7 @@ export interface BusinessObject {
 export interface CVInformation extends BusinessObject {
   field: CVPart;
   value: string;
+  isArray: boolean;
 }
 
 export interface Account extends BusinessObject {

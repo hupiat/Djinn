@@ -40,7 +40,8 @@ export default function InputLinkedinImport({ onFetch, ...props }: IProps) {
               .filter((key) => CVPartFields.includes(key as CVPart))
               .map((key) => {
                 let parsed = res[key];
-                if (Array.isArray(res[key])) {
+                const isArray = Array.isArray(res[key]);
+                if (isArray) {
                   parsed = JSON.stringify(res[key]);
                 } else {
                   parsed = String(parsed);
@@ -48,6 +49,7 @@ export default function InputLinkedinImport({ onFetch, ...props }: IProps) {
                 return {
                   field: key,
                   value: parsed,
+                  isArray: isArray,
                 } as CVInformation;
               })
           );

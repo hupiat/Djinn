@@ -1,3 +1,5 @@
+import { CVPart } from "./types";
+
 export const validateEmail = (email: string): boolean => {
   return Boolean(
     email.match(
@@ -24,3 +26,8 @@ export const getCSSVar = (name: string): string => {
 };
 
 export const isMobile = (): boolean => window.innerWidth < 768;
+
+export const CVPartFieldToLabel = (field: CVPart) => {
+  const res = field.replaceAll("_", " ");
+  return res.charAt(0).toUpperCase() + res.slice(1);
+};
